@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <title id="title">Home | E-Shopper</title>
+</head>
+
+<body>
+<header th:replace="fragments/header :: header"></header>
+<section th:replace="fragments/slider :: slider"></section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div th:replace="fragments/category"></div>
+            <div th:replace="fragments/products"></div>
+        </div>
+    </div>
+</section>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
