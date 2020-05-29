@@ -8,7 +8,7 @@ public class AccountController {
 
     @RequestMapping("/")
     public String index() {
-        return "index";
+        return "admin/admin";
     }
 
 }
