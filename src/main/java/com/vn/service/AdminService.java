@@ -13,5 +13,5 @@ public interface AdminService {
 
     void updateAdmin(Admin admin);
 
-    void removeAdmin(int id);
+    void removeAdmin(Admin admin);
 }

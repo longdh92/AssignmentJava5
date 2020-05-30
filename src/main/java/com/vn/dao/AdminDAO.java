@@ -13,7 +13,7 @@ public class AdminDAO implements AdminService {
     SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
     @Override
-    @SuppressWarnings(value = { "unchecked" })
+    @SuppressWarnings(value = {"unchecked"})
     public List<Admin> findAllAdmin() {
         Session session = null;
         Transaction transaction = null;
@@ -37,21 +37,56 @@ public class AdminDAO implements AdminService {
 
     @Override
     public void save(Admin admin) {
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.save(admin);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Admin findByID(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Admin.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public void updateAdmin(Admin admin) {
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.update(admin);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void removeAdmin(int id) {
-
+    public void removeAdmin(Admin admin) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.delete(admin);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        }
     }
 }
