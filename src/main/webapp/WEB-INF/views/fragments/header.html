@@ -13,9 +13,7 @@
     <link href="../resources/css/animate.css" rel="stylesheet">
     <link href="../resources/css/main.css" rel="stylesheet">
     <link href="../resources/css/responsive.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="../resources/js/html5shiv.js"></script>
-    <script src="../resources/js/respond.min.js"></script>
+
     <![endif]-->
     <link rel="shortcut icon" href="resources/images/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144"
@@ -25,13 +23,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72"
           href="resources/images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="resources/images/ico/apple-touch-icon-57-precomposed.png">
-
-    <script src="../resources/js/jquery.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <script src="../resources/js/jquery.scrollUp.min.js"></script>
-    <script src="../resources/js/price-range.js"></script>
-    <script src="../resources/js/jquery.prettyPhoto.js"></script>
-    <script src="../resources/js/main.js"></script>
 </head><!--/head-->
 <body>
 <header id="header" th:fragment="header"><!--header-->
@@ -141,11 +132,16 @@
         </div>
     </div><!--/header-bottom-->
 </header><!--/header-->
-<script src="../resources/js/jquery.js"></script>
-<script src="../resources/js/bootstrap.min.js"></script>
-<script src="../resources/js/jquery.scrollUp.min.js"></script>
-<script src="../resources/js/price-range.js"></script>
-<script src="../resources/js/jquery.prettyPhoto.js"></script>
-<script src="../resources/js/main.js"></script>
+<div th:fragment="script">
+    <script src="../resources/js/html5shiv.js"></script>
+    <script src="../resources/js/respond.min.js"></script>
+
+    <script src="../resources/js/jquery.js"></script>
+    <script src="../resources/js/bootstrap.min.js"></script>
+    <script src="../resources/js/jquery.scrollUp.min.js"></script>
+    <script src="../resources/js/price-range.js"></script>
+    <script src="../resources/js/jquery.prettyPhoto.js"></script>
+    <script src="../resources/js/main.js"></script>
+</div>
 </body>
 </html>
