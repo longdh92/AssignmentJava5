@@ -48,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**", "/admin/**")
-                .addResourceLocations("/WEB-INF/views/resources/", "/WEB-INF/views/admin/");
+        registry.addResourceHandler("/resources/**", "/resourcesAdmin/**")
+                .addResourceLocations("/WEB-INF/views/resources/", "/WEB-INF/views/admin/resourcesAdmin/");
     }
 }
