@@ -5,13 +5,11 @@ import com.vn.model.Admin;
 import java.util.List;
 
 public interface AdminService {
-    List<Admin> findAllAdmin();
+    List<Admin> findAll();
 
-    void save(Admin admin);
+    Admin findById(Long id);
 
-    Admin findByID(int id);
+    void save(Admin customer);
 
-    void updateAdmin(Admin admin);
-
-    void removeAdmin(Admin admin);
+    void remove(Long id);
 }

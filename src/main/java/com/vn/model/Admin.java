@@ -8,53 +8,53 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idAdmin")
-    private int idAdmin;
+    private Long idAdmin;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "usernameAdmin")
+    private String usernameAdmin;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "passwordAdmin")
+    private String passwordAdmin;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "emailAdmin")
+    private String emailAdmin;
 
     @Override
     public String toString() {
         return "Admin{" +
-                "username='" + username + '\'' +
+                "username='" + usernameAdmin + '\'' +
                 '}';
     }
 
-    public int getIdAdmin() {
+    public Long getIdAdmin() {
         return idAdmin;
     }
 
-    public void setIdAdmin(int idAdmin) {
+    public void setIdAdmin(Long idAdmin) {
         this.idAdmin = idAdmin;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUsernameAdmin() {
+        return usernameAdmin;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernameAdmin(String usernameAdmin) {
+        this.usernameAdmin = usernameAdmin;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordAdmin() {
+        return passwordAdmin;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordAdmin(String passwordAdmin) {
+        this.passwordAdmin = passwordAdmin;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailAdmin() {
+        return emailAdmin;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailAdmin(String emailAdmin) {
+        this.emailAdmin = emailAdmin;
     }
 }
