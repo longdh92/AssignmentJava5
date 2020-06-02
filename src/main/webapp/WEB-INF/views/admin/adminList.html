@@ -41,9 +41,9 @@
                                 <tbody>
                                 <tr th:each="admin : ${adminList}">
                                     <td th:text="${admin.getIdAdmin()}"></td>
-                                    <td th:text="${admin.getUsername()}"></td>
-                                    <td th:text="${admin.getEmail()}"></td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td th:text="${admin.getUsernameAdmin()}"></td>
+                                    <td th:text="${admin.getEmailAdmin()}"></td>
+                                    <td><a th:href="@{'/editAdminView/' + ${(admin.getIdAdmin()*4+74)/2}}">Edit</a></td>
                                     <td><a href="#">Remove</a></td>
                                 </tr>
                                 </tbody>

@@ -23,7 +23,7 @@ public class AdminRepositoryImpl implements AdminRepository {
 
     @Override
     public Admin findById(Long id) {
-        return null;
+        return entityManager.find(Admin.class, id);
     }
 
     @Override

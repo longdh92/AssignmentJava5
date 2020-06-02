@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/header :: head">
+    <title id="title">Edit Admin</title>
+</head>
+<body>
+<div id="layoutSidenav">
+    <div th:replace="admin/fragments/menu :: menu"></div>
+    <div id="layoutSidenav_content">
+        <div class="card-body">
+            <form method="post" action="/editAdmin">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1">User ID</label><input
+                                class="form-control py-4" type="text"
+                                name="idAdmin" th:value="${admin.getIdAdmin()}" readonly/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1">Username</label><input
+                                class="form-control py-4" type="text" value=""
+                                name="usernameAdmin" th:value="${admin.getUsernameAdmin()}" readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="small mb-1">Email</label><input
+                        class="form-control py-4" type="email"
+                        aria-describedby="emailHelp" value="" name="emailAdmin"
+                        required="required" th:value="${admin.getEmailAdmin()}"/>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1">Password</label><input
+                                class="form-control py-4" type="password"
+                                name="passwordAdmin" required="required"
+                                th:value="${admin.getPasswordAdmin()}"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1">Confirm
+                                password</label><input class="form-control py-4" type="password"
+                                                       value="" name="confirm" required="required"
+                                                       th:value="${admin.getPasswordAdmin()}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4 mb-0">
+                    <button class="btn btn-primary btn-block" type="submit">Update
+                    </button>
+                </div>
+                <br>
+                <div th:class="${alert}">
+                    <strong th:text="${message}"></strong>
+                </div>
+            </form>
+        </div>
+        <footer th:replace="admin/fragments/footer :: footer"></footer>
+    </div>
+</div>
+<div th:replace="admin/fragments/header :: script"></div>
+</body>
+</html>

@@ -10,7 +10,7 @@ public class Admin {
     @Column(name = "idAdmin")
     private Long idAdmin;
 
-    @Column(name = "usernameAdmin")
+    @Column(name = "usernameAdmin", unique = true)
     private String usernameAdmin;
 
     @Column(name = "passwordAdmin")
@@ -18,6 +18,9 @@ public class Admin {
 
     @Column(name = "emailAdmin")
     private String emailAdmin;
+
+    @Column(name = "status")
+    private String status;
 
     @Override
     public String toString() {
