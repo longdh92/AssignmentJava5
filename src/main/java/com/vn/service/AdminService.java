@@ -9,7 +9,7 @@ public interface AdminService {
 
     Admin findById(Long id);
 
-    void save(Admin customer);
+    void save(Admin admin);
 
     void remove(Long id);
 }

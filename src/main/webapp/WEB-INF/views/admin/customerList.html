@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/header :: head">
+    <title id="title">Admin List</title>
+</head>
+<body class="sb-nav-fixed">
+<nav th:replace="admin/fragments/header :: header"></nav>
+<div id="layoutSidenav">
+    <div th:replace="admin/fragments/menu :: menu"></div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Customers</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Customer List</li>
+                </ol>
+                <div class="card mb-4">
+                    <div class="card-header"><i class="fas fa-table mr-1"></i>Customers accounts</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                    <th>Reset Password</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                    <th>Reset password</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="customer : ${customerList}">
+                                    <td th:text="${customer.getIdCustomer()}"></td>
+                                    <td th:text="${customer.getCustomerName()}"></td>
+                                    <td th:text="${customer.getEmailCustomer()}"></td>
+                                    <td th:text="${customer.getAddress()}"></td>
+                                    <td th:text="${customer.isGender() ? 'Male' : 'Female'}"></td>
+                                    <td th:text="${customer.getPhone()}"></td>
+                                    <td>
+                                        <th:block th:if="${customer.getStatus().length() > 0}"><a
+                                                th:href="@{'/editAdminView/' + ${(customer.getIdCustomer()*4+74)/2}}">Reset
+                                            password</a></th:block>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="admin/fragments/footer :: footer"></footer>
+    </div>
+</div>
+<div th:replace="admin/fragments/header :: script"></div>
+</body>
+</html>

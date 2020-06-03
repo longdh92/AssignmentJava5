@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -37,7 +38,7 @@ public class AdminController {
     }
 
     @PostMapping("/loginAdmin")
-    public String loginAdmin(@ModelAttribute("admin") Admin admin, Model model, HttpServletResponse response, HttpServletRequest request) {
+    public String loginAdmin(@ModelAttribute("admin") Admin admin, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
         List<Admin> list = adminService.findAll();
         Cookie usernameAdmin = new Cookie("usernameAdmin", admin.getUsernameAdmin());
         Cookie passwordAdmin = new Cookie("passwordAdmin", admin.getPasswordAdmin());
@@ -176,6 +177,16 @@ public class AdminController {
         Admin admin = adminService.findById(id);
         model.addAttribute("admin", admin);
         return "admin/editAdmin";
+    }
+
+    @GetMapping("/removeAdmin/{idAdmin}")
+    public String removeAdmin(@PathVariable(value = "idAdmin") Long idAdmin, Model model) {
+        Long id = (idAdmin * 2 - 74) / 4;
+        adminService.remove(id);
+        model.addAttribute("message", "Delete Admin Successful !");
+        model.addAttribute("alert", "alert alert-success");
+        model.addAttribute("adminList", adminService.findAll());
+        return "admin/adminList";
     }
 
     @PostMapping("/editAdmin")

@@ -38,7 +38,7 @@ public class AdminRepositoryImpl implements AdminRepository {
 
     @Override
     public void remove(Long id) {
-
+        entityManager.remove(this.findById(id));
     }
 
     @Override

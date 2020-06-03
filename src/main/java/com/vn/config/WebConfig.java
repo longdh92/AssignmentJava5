@@ -2,8 +2,12 @@ package com.vn.config;
 
 import com.vn.repository.AdminRepository;
 import com.vn.repository.AdminRepositoryImpl;
+import com.vn.repository.CustomerRepository;
+import com.vn.repository.CustomerRepositoryImpl;
 import com.vn.service.AdminService;
 import com.vn.service.AdminServiceImpl;
+import com.vn.service.CustomerService;
+import com.vn.service.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +21,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -45,13 +50,23 @@ public class WebConfig implements WebMvcConfigurer {
     private ApplicationContext applicationContext;
 
     @Bean
-    public AdminRepository customerRepository() {
+    public AdminRepository adminRepository() {
         return new AdminRepositoryImpl();
     }
 
     @Bean
-    public AdminService customerService() {
+    public AdminService adminService() {
         return new AdminServiceImpl();
+    }
+
+    @Bean
+    public CustomerRepository customerRepository() {
+        return new CustomerRepositoryImpl();
+    }
+
+    @Bean
+    public CustomerService customerService() {
+        return new CustomerServiceImpl();
     }
 
     @Bean
@@ -60,6 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
+        templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         return templateResolver;
     }
@@ -74,6 +90,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setContentType("text/html; charset=UTF-8");
         viewResolver.setTemplateEngine((ISpringTemplateEngine) templateEngine());
         return viewResolver;
     }
@@ -96,7 +113,7 @@ public class WebConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/AssignmentJava5");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/AssignmentJava5?useUnicode=yes&characterEncoding=UTF-8");
         dataSource.setUsername("root");
         dataSource.setPassword("123456");
         return dataSource;
@@ -126,5 +143,10 @@ public class WebConfig implements WebMvcConfigurer {
         emBean.setJpaVendorAdapter(vendorAdapter);
         emBean.setJpaProperties(additionalProperties());
         return emBean;
+    }
+
+    @Bean
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

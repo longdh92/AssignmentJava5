@@ -27,7 +27,5 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void remove(Long id) {
-
-    }
+    public void remove(Long id) { adminRepository.remove(id); }
 }
