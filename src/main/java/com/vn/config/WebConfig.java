@@ -1,13 +1,7 @@
 package com.vn.config;
 
-import com.vn.repository.AdminRepository;
-import com.vn.repository.AdminRepositoryImpl;
-import com.vn.repository.CustomerRepository;
-import com.vn.repository.CustomerRepositoryImpl;
-import com.vn.service.AdminService;
-import com.vn.service.AdminServiceImpl;
-import com.vn.service.CustomerService;
-import com.vn.service.CustomerServiceImpl;
+import com.vn.repository.*;
+import com.vn.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -68,6 +62,12 @@ public class WebConfig implements WebMvcConfigurer {
     public CustomerService customerService() {
         return new CustomerServiceImpl();
     }
+
+    @Bean
+    public CategoryRepository categoryRepository() { return new CategoryRepositoryImpl(); }
+
+    @Bean
+    public CategoryService categoryService() { return new CategoryServiceImpl(); }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {

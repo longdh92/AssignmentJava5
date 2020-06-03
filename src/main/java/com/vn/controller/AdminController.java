@@ -20,7 +20,12 @@ public class AdminController {
     private AdminService adminService;
 
     @RequestMapping("/admin")
-    public String index() {
+    public String index(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        }
+        model.addAttribute("admin", admin);
         return "admin/admin";
     }
 
@@ -52,6 +57,7 @@ public class AdminController {
                         response.addCookie(passwordAdmin);
                         model.addAttribute("usernameAdmin", usernameAdmin);
                         model.addAttribute("passwordAdmin", passwordAdmin);
+                        session.setAttribute("admin", admin);
                         return "admin/admin";
                     } else {
                         usernameAdmin.setMaxAge(0);
@@ -60,6 +66,7 @@ public class AdminController {
                         response.addCookie(passwordAdmin);
                         model.addAttribute("usernameAdmin", usernameAdmin);
                         model.addAttribute("passwordAdmin", passwordAdmin);
+                        session.setAttribute("admin", admin);
                         return "admin/admin";
                     }
                 } else {
@@ -77,20 +84,19 @@ public class AdminController {
     }
 
     @RequestMapping("/logoutAdmin")
-    public String logoutAdmin(HttpServletRequest request, HttpServletResponse response) {
+    public String logoutAdmin(HttpServletRequest request, HttpSession session, Model model) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("usernameAdmin")) {
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
+                    model.addAttribute("usernameAdmin", cookie.getValue());
                 }
                 if (cookie.getName().equals("passwordAdmin")) {
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
+                    model.addAttribute("passwordAdmin", cookie.getValue());
                 }
             }
         }
+        session.removeAttribute("admin");
         return "admin/login";
     }
 

@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/header :: head">
+    <title id="title">Category List</title>
 </head>
-<body>
-
+<body class="sb-nav-fixed">
+<nav th:replace="admin/fragments/header :: header"></nav>
+<div id="layoutSidenav">
+    <div th:replace="admin/fragments/menu :: menu"></div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Categories</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Categories List</li>
+                </ol>
+                <div class="card mb-4">
+                    <div class="card-header"><i class="fas fa-table mr-1"></i>Categories</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="category : ${categoryList}">
+                                    <td th:text="${category.getIdCategory()}"></td>
+                                    <td th:text="${category.getCategoryName()}"></td>
+                                    <td th:text="${category.getStatus()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <form method="post" action="/addNewCategory">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="small mb-1">Category Name</label><input
+                                class="form-control py-4" type="text"
+                                name="categoryName" placeholder="Input new category"/>
+                            <input type="hidden" value="" name="status"/>
+                            <br>
+                            <button class="btn btn-primary btn-block" type="submit">Add</button>
+                        </div>
+                    </div>
+                    <div th:class="${alert}">
+                        <strong th:text="${message}"></strong>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <footer th:replace="admin/fragments/footer :: footer"></footer>
+    </div>
+</div>
+<div th:replace="admin/fragments/header :: script"></div>
 </body>
 </html>

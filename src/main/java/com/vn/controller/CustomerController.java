@@ -17,8 +17,7 @@ public class CustomerController {
 
     @GetMapping("/customerList")
     public String customerList(Model model) {
-        List<Customer> list = customerService.findAll();
-        model.addAttribute("customerList", list);
+        model.addAttribute("customerList", customerService.findAll());
         return "admin/customerList";
     }
 }
