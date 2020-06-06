@@ -4,6 +4,9 @@
     <title id="title">Edit Admin</title>
 </head>
 <body>
+<nav th:replace="admin/fragments/header :: header(id=${admin.getIdAdmin()})">
+    <div id="username" th:text="${'Hello ' + admin.getUsernameAdmin()}"></div>
+</nav>
 <div id="layoutSidenav">
     <div th:replace="admin/fragments/menu :: menu"></div>
     <div id="layoutSidenav_content">
@@ -14,14 +17,14 @@
                         <div class="form-group">
                             <label class="small mb-1">User ID</label><input
                                 class="form-control py-4" type="text"
-                                name="idAdmin" th:value="${admin.getIdAdmin()}" readonly/>
+                                name="idAdmin" th:value="${admin1.getIdAdmin()}" readonly/>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="small mb-1">Username</label><input
                                 class="form-control py-4" type="text" value=""
-                                name="usernameAdmin" th:value="${admin.getUsernameAdmin()}" readonly/>
+                                name="usernameAdmin" th:value="${admin1.getUsernameAdmin()}" readonly/>
                         </div>
                     </div>
                 </div>
@@ -29,7 +32,7 @@
                     <label class="small mb-1">Email</label><input
                         class="form-control py-4" type="email"
                         aria-describedby="emailHelp" value="" name="emailAdmin"
-                        required="required" th:value="${admin.getEmailAdmin()}"/>
+                        required="required" th:value="${admin1.getEmailAdmin()}"/>
                 </div>
                 <div class="form-row">
                     <div class="col-md-6">
@@ -37,7 +40,7 @@
                             <label class="small mb-1">Password</label><input
                                 class="form-control py-4" type="password"
                                 name="passwordAdmin" required="required"
-                                th:value="${admin.getPasswordAdmin()}"/>
+                                th:value="${admin1.getPasswordAdmin()}"/>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -45,7 +48,7 @@
                             <label class="small mb-1">Confirm
                                 password</label><input class="form-control py-4" type="password"
                                                        value="" name="confirm" required="required"
-                                                       th:value="${admin.getPasswordAdmin()}"/>
+                                                       th:value="${admin1.getPasswordAdmin()}"/>
                         </div>
                     </div>
                 </div>

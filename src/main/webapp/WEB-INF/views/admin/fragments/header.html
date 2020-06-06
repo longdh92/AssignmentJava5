@@ -12,12 +12,15 @@
           crossorigin="anonymous"/>
 </head>
 <body>
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" th:fragment="header">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" th:fragment="header(id)">
     <a class="navbar-brand" href="/admin">Admin</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i>
     </button>
     <!-- Navbar Search-->
-    <a class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" href="#"><div th:replace=" :: #username"></div></a>
+    <a class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"
+       th:href="@{'/editAdminView/' + ${(id*4+74)/2}}">
+        <div th:replace=" :: #username"></div>
+    </a>
     <!-- Navbar-->
     <ul class="navbar-nav ml-auto ml-md-0">
         <li class="nav-item dropdown">
@@ -44,6 +47,20 @@
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"
             crossorigin="anonymous"></script>
     <script th:src="@{../resourcesAdmin/assets/demo/datatables-demo.js}"></script>
+    <script type="text/javascript">
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#avatar').attr('src', e.target.result).width(180)
+                        .height(180);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

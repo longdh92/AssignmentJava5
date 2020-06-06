@@ -12,4 +12,6 @@ public interface Repository<T> {
     void remove(Long id);
 
     void update(Long id, T model);
+
+    T findByName(String name);
 }

@@ -1,6 +1,7 @@
 package com.vn.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -16,11 +17,12 @@ public class Category {
     @Column(name = "status")
     private String status;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCategory")
+    private Set<Product> products;
+
     @Override
     public String toString() {
-        return "Category{" +
-                "categoryName='" + categoryName + '\'' +
-                '}';
+        return categoryName;
     }
 
     public Long getIdCategory() {
@@ -45,5 +47,13 @@ public class Category {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

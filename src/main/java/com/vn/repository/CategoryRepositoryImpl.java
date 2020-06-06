@@ -45,4 +45,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public void update(Long id, Category model) {
 
     }
+
+    @Override
+    public Category findByName(String name) {
+        String query = "select c from Category c where c.categoryName = :categoryName";
+        TypedQuery<Category> categoryTypedQuery = entityManager.createQuery(query, Category.class);
+        categoryTypedQuery.setParameter("categoryName", name);
+        return categoryTypedQuery.getResultList().get(0);
+    }
 }

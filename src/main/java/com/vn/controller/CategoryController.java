@@ -1,5 +1,6 @@
 package com.vn.controller;
 
+import com.vn.model.Admin;
 import com.vn.model.Category;
 import com.vn.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -17,24 +19,29 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categoryList")
-    public String categoryList(Model model) {
+    public String categoryList(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        }
+        model.addAttribute("admin", admin);
         model.addAttribute("categoryList", categoryService.findAll());
         return "admin/categoryList";
     }
 
     @PostMapping("/addNewCategory")
-    public String addCategory(Model model, Category category) {
+    public String addCategory(Model model, Category category, HttpSession session) {
         List<Category> categoryList = categoryService.findAll();
         for (Category category1 : categoryList) {
             if (category.getCategoryName().trim().equalsIgnoreCase(category1.getCategoryName())) {
                 model.addAttribute("message", "The category already exists !");
                 model.addAttribute("alert", "alert alert-danger");
-                return categoryList(model);
+                return categoryList(session, model);
             }
         }
         categoryService.save(category);
         model.addAttribute("message", "Add new category successful !");
         model.addAttribute("alert", "alert alert-success");
-        return categoryList(model);
+        return categoryList(session, model);
     }
 }

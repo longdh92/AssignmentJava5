@@ -12,4 +12,6 @@ public interface AdminService {
     void save(Admin admin);
 
     void remove(Long id);
+
+    Admin findByName(String name);
 }

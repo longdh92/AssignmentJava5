@@ -63,4 +63,9 @@ public class AdminDAO implements AdminService {
     public void remove(Long id) {
 
     }
+
+    @Override
+    public Admin findByName(String name) {
+        return null;
+    }
 }

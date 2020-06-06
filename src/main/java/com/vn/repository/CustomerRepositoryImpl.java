@@ -45,4 +45,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     public void update(Long id, Customer model) {
 
     }
+
+    @Override
+    public Customer findByName(String name) {
+        return null;
+    }
 }

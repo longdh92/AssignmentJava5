@@ -4,7 +4,7 @@
     <title id="title">Admin</title>
 </head>
 <body class="sb-nav-fixed">
-<nav th:replace="admin/fragments/header :: header">
+<nav th:replace="admin/fragments/header :: header(id=${admin.getIdAdmin()})">
     <div id="username" th:text="${'Hello ' + admin.getUsernameAdmin()}"></div>
 </nav>
 <div id="layoutSidenav">

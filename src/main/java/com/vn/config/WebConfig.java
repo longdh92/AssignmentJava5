@@ -18,6 +18,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -64,10 +66,24 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CategoryRepository categoryRepository() { return new CategoryRepositoryImpl(); }
+    public CategoryRepository categoryRepository() {
+        return new CategoryRepositoryImpl();
+    }
 
     @Bean
-    public CategoryService categoryService() { return new CategoryServiceImpl(); }
+    public CategoryService categoryService() {
+        return new CategoryServiceImpl();
+    }
+
+    @Bean
+    public ProductRepository productRepository() {
+        return new ProductRepositoryImpl();
+    }
+
+    @Bean
+    public ProductService productService() {
+        return new ProductServiceImpl();
+    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -129,7 +145,7 @@ public class WebConfig implements WebMvcConfigurer {
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
         return properties;
     }
 
@@ -148,5 +164,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+//        multipartResolver.setMaxUploadSize(10000000);
+        return multipartResolver;
     }
 }

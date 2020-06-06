@@ -45,4 +45,12 @@ public class AdminRepositoryImpl implements AdminRepository {
     public void update(Long id, Admin model) {
 
     }
+
+    @Override
+    public Admin findByName(String name) {
+        String query = "select a from Admin a where a.usernameAdmin = :usernameAdmin";
+        TypedQuery<Admin> adminTypedQuery = entityManager.createQuery(query, Admin.class);
+        adminTypedQuery.setParameter("usernameAdmin", name);
+        return adminTypedQuery.getResultList().get(0);
+    }
 }
