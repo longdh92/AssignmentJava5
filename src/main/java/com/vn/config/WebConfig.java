@@ -86,14 +86,10 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CartDetailRepository cartDetailRepository() {
-        return new CartDetailRepositoryImpl();
-    }
+    public CartDetailRepository cartDetailRepository() { return new CartDetailRepositoryImpl(); }
 
     @Bean
-    public CartDetailService cartDetailService() {
-        return new CartDetailServiceImpl();
-    }
+    public CartDetailService cartDetailService() { return new CartDetailServiceImpl(); }
 
     @Bean
     public CartRepository cartRepository() {
@@ -101,9 +97,21 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    CartService cartService() {
+    public CartService cartService() {
         return new CartServiceImpl();
     }
+
+    @Bean
+    public InvoiceRepository invoiceRepository() { return new InvoiceRepositoryImpl(); }
+
+    @Bean
+    public InvoiceService invoiceService() { return new InvoiceServiceImpl(); }
+
+    @Bean
+    public InvoiceDetailRepository invoiceDetailRepository() { return new InvoiceDetailRepositoryImpl(); }
+
+    @Bean
+    public InvoiceDetailService invoiceDetailService() { return new InvoiceDetailServiceImpl(); }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
