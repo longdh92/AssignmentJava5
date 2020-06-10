@@ -20,6 +20,7 @@ import java.io.IOException;
 
 @Controller
 @MultipartConfig
+@RequestMapping("/admin")
 public class ProductController {
 
     @Autowired

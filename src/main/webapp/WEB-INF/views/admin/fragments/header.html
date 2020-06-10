@@ -7,18 +7,18 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title th:replace=" :: #title"></title>
-    <link th:href="@{../resourcesAdmin/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{/resourcesAdmin/css/styles.css}" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
           crossorigin="anonymous"/>
 </head>
 <body>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" th:fragment="header(id)">
-    <a class="navbar-brand" href="/admin">Admin</a>
+    <a class="navbar-brand" href="/admin/admin">Admin</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i>
     </button>
     <!-- Navbar Search-->
     <a class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"
-       th:href="@{'/editAdminView/' + ${(id*4+74)/2}}">
+       th:href="@{'/admin/editAdminView/' + ${(id*4+74)/2}}">
         <div th:replace=" :: #username"></div>
     </a>
     <!-- Navbar-->
@@ -27,7 +27,7 @@
             <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/logoutAdmin">Logout</a>
+                <a class="dropdown-item" href="/admin/logoutAdmin">Logout</a>
             </div>
         </li>
     </ul>
@@ -38,15 +38,15 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
-    <script th:src="@{../resourcesAdmin/js/scripts.js}"></script>
+    <script th:src="@{/resourcesAdmin/js/scripts.js}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
             crossorigin="anonymous"></script>
-    <script th:src="@{../resourcesAdmin/assets/demo/chart-area-demo.js}"></script>
-    <script th:src="@{../resourcesAdmin/assets/demo/chart-bar-demo.js}"></script>
+    <script th:src="@{/resourcesAdmin/assets/demo/chart-area-demo.js}"></script>
+    <script th:src="@{/resourcesAdmin/assets/demo/chart-bar-demo.js}"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"
             crossorigin="anonymous"></script>
-    <script th:src="@{../resourcesAdmin/assets/demo/datatables-demo.js}"></script>
+    <script th:src="@{/resourcesAdmin/assets/demo/datatables-demo.js}"></script>
     <script type="text/javascript">
         function readURL(input) {
             if (input.files && input.files[0]) {

@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <h1 class="mt-4">Admins</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
                     <li class="breadcrumb-item active">Admin List</li>
                 </ol>
                 <div th:class="${alert}">
@@ -48,8 +48,8 @@
                                     <td th:text="${admin.getIdAdmin()}"></td>
                                     <td th:text="${admin.getUsernameAdmin()}"></td>
                                     <td th:text="${admin.getEmailAdmin()}"></td>
-                                    <td><a th:href="@{'/editAdminView/' + ${(admin.getIdAdmin()*4+74)/2}}">Edit</a></td>
-                                    <td><a th:href="@{'/removeAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Remove</a></td>
+                                    <td><a th:href="@{'/admin/editAdminView/' + ${(admin.getIdAdmin()*4+74)/2}}">Edit</a></td>
+                                    <td><a th:href="@{'/admin/removeAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Remove</a></td>
                                 </tr>
                                 </tbody>
                             </table>

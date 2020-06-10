@@ -11,7 +11,7 @@
     <div th:replace="admin/fragments/menu :: menu"></div>
     <div id="layoutSidenav_content">
         <div class="card-body">
-            <form method="post" action="/insertUpdateProduct" enctype="multipart/form-data">
+            <form method="post" action="/admin/insertUpdateProduct" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -47,7 +47,7 @@
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group"><img id="avatar"
-                                                     th:src="@{'../resourcesAdmin/images/home/' + ${product.getImage()}}"
+                                                     th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}"
                                                      width="180" height="180"/>
                             <input type="file" name="imageProduct" onchange="readURL(this)"/>
                             <input type="hidden" name="image" th:value="${product.getImage()}"/>

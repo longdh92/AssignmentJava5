@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <h1 class="mt-4">Customers</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
                     <li class="breadcrumb-item active">Customer List</li>
                 </ol>
                 <div class="card mb-4">
@@ -54,7 +54,7 @@
                                     <td th:text="${customer.getPhone()}"></td>
                                     <td>
                                         <th:block th:if="${customer.getStatus().length() > 0}"><a
-                                                th:href="@{'/editAdminView/' + ${(customer.getIdCustomer()*4+74)/2}}">Reset
+                                                th:href="@{'/admin/editAdminView/' + ${(customer.getIdCustomer()*4+74)/2}}">Reset
                                             password</a></th:block>
                                     </td>
                                 </tr>

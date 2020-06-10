@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <h1 class="mt-4">Products</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
                     <li class="breadcrumb-item active">Product List</li>
                 </ol>
                 <div class="card mb-4">
@@ -54,7 +54,7 @@
                                 <tr th:each="product : ${productList}">
                                     <td th:text="${product.getIdProduct()}"></td>
                                     <td th:text="${product.getProductName()}"></td>
-                                    <td><img th:src="@{'../resourcesAdmin/images/home/' + ${product.getImage()}}"
+                                    <td><img th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}"
                                              width="180" height="180"/></td>
                                     <td th:text="${product.getAmount()}"></td>
                                     <td th:text="${'$' + product.getPrice()}"></td>
@@ -62,16 +62,16 @@
                                     <td th:text="${product.getDescription()}"></td>
                                     <td th:text="${product.getStatus()}"></td>
                                     <td>
-                                        <a th:href="@{'/insertUpdateProductView/' + ${(product.getIdProduct()*4+74)/2}}">Edit</a>
+                                        <a th:href="@{'/admin/insertUpdateProductView/' + ${(product.getIdProduct()*4+74)/2}}">Edit</a>
                                     </td>
-                                    <td><a th:href="@{'/removeProduct/' + ${(product.getIdProduct()*4+74)/2}}">Remove</a></td>
+                                    <td><a th:href="@{'/admin/removeProduct/' + ${(product.getIdProduct()*4+74)/2}}">Remove</a></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <form method="get" action="/insertNewProduct">
+                <form method="get" action="/admin/insertNewProduct">
                     <div class="form-row">
                         <div class="form-group">
                             <button class="btn btn-primary btn-block" type="submit">Add new Product</button>
