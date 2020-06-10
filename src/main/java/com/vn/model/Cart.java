@@ -2,6 +2,7 @@ package com.vn.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -14,6 +15,9 @@ public class Cart implements Serializable {
     @OneToOne
     @JoinColumn(name = "idCustomer")
     private Customer customer;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCart")
+    private Set<Cart_detail> cart_details;
 
     public Long getIdCart() {
         return idCart;
@@ -29,5 +33,13 @@ public class Cart implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Set<Cart_detail> getCart_details() {
+        return cart_details;
+    }
+
+    public void setCart_details(Set<Cart_detail> cart_details) {
+        this.cart_details = cart_details;
     }
 }

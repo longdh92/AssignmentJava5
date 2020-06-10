@@ -2,6 +2,7 @@ package com.vn.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -32,6 +33,9 @@ public class Product implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idCategory")
     private Category idCategory;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
+    private Set<Cart_detail> cart_details;
 
     @Override
     public String toString() {
@@ -102,5 +106,13 @@ public class Product implements Serializable {
 
     public void setIdCategory(Category idCategory) {
         this.idCategory = idCategory;
+    }
+
+    public Set<Cart_detail> getCart_details() {
+        return cart_details;
+    }
+
+    public void setCart_details(Set<Cart_detail> cart_details) {
+        this.cart_details = cart_details;
     }
 }

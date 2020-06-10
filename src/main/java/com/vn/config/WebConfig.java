@@ -86,6 +86,16 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public CartDetailRepository cartDetailRepository() {
+        return new CartDetailRepositoryImpl();
+    }
+
+    @Bean
+    public CartDetailService cartDetailService() {
+        return new CartDetailServiceImpl();
+    }
+
+    @Bean
     public CartRepository cartRepository() {
         return new CartRepositoryImpl();
     }
