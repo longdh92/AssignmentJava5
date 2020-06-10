@@ -31,6 +31,11 @@ public class CategoryController {
 
     @PostMapping("/addNewCategory")
     public String addCategory(Model model, Category category, HttpSession session) {
+        if (category.getCategoryName().trim().length() == 0) {
+            model.addAttribute("message", "Empty Category Name !");
+            model.addAttribute("alert", "alert alert-danger");
+            return categoryList(session, model);
+        }
         List<Category> categoryList = categoryService.findAll();
         for (Category category1 : categoryList) {
             if (category.getCategoryName().trim().equalsIgnoreCase(category1.getCategoryName())) {

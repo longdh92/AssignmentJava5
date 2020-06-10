@@ -26,21 +26,18 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Category Name</th>
-                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
                                     <th>ID</th>
                                     <th>Category Name</th>
-                                    <th>Status</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
                                 <tr th:each="category : ${categoryList}">
                                     <td th:text="${category.getIdCategory()}"></td>
                                     <td th:text="${category.getCategoryName()}"></td>
-                                    <td th:text="${category.getStatus()}"></td>
                                 </tr>
                                 </tbody>
                             </table>

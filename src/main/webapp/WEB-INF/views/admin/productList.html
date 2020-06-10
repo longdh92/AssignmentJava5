@@ -64,13 +64,20 @@
                                     <td>
                                         <a th:href="@{'/insertUpdateProductView/' + ${(product.getIdProduct()*4+74)/2}}">Edit</a>
                                     </td>
-                                    <td><a href="#">Remove</a></td>
+                                    <td><a th:href="@{'/removeProduct/' + ${(product.getIdProduct()*4+74)/2}}">Remove</a></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+                <form method="get" action="/insertNewProduct">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" type="submit">Add new Product</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </main>
         <footer th:replace="admin/fragments/footer :: footer"></footer>

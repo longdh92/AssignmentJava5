@@ -86,6 +86,16 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public CartRepository cartRepository() {
+        return new CartRepositoryImpl();
+    }
+
+    @Bean
+    CartService cartService() {
+        return new CartServiceImpl();
+    }
+
+    @Bean
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
