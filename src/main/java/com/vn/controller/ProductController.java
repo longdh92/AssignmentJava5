@@ -6,7 +6,6 @@ import com.vn.model.Product;
 import com.vn.service.CategoryService;
 import com.vn.service.ProductService;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
