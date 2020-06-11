@@ -15,7 +15,7 @@ public class Customer implements Serializable {
     @Column(name = "customerName")
     private String customerName;
 
-    @Column(name = "emailCustomer")
+    @Column(name = "emailCustomer", unique = true)
     private String emailCustomer;
 
     @Column(name = "passwordCustomer")
