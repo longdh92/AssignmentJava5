@@ -42,7 +42,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
-    public void update(Long id, Admin model) {
+    public void update(Admin model) {
 
     }
 

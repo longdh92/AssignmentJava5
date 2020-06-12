@@ -30,4 +30,20 @@ public class CartDetailServiceImpl implements CartDetailService {
     public void remove(Long id) {
         cartDetailRepository.remove(id);
     }
+
+    @Override
+    public List<Cart_detail> findByCustomer(Long idCustomer) {
+        return cartDetailRepository.findByCustomer(idCustomer);
+    }
+
+    @Override
+    public void update(Cart_detail cart_detail) {
+        cartDetailRepository.update(cart_detail);
+    }
+
+    @Override
+    public void removeProduct(Long idCart, Long idProduct) {
+        cartDetailRepository.removeProduct(idCart, idProduct);
+    }
+
 }

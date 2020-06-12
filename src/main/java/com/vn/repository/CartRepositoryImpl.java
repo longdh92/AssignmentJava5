@@ -42,12 +42,20 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void update(Long id, Cart model) {
+    public void update(Cart model) {
 
     }
 
     @Override
     public Cart findByName(String name) {
         return null;
+    }
+
+    @Override
+    public Cart findIdCart(Long idCustomer) {
+        String query = "select c from Cart c where c.customer.idCustomer = :idCustomer";
+        TypedQuery<Cart> cartTypedQuery = entityManager.createQuery(query, Cart.class);
+        cartTypedQuery.setParameter("idCustomer", idCustomer);
+        return cartTypedQuery.getResultList().get(0);
     }
 }

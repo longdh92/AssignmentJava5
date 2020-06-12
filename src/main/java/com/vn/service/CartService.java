@@ -12,4 +12,6 @@ public interface CartService {
     void save(Cart cart);
 
     void remove(Long id);
+
+    Cart findIdCart(Long idCustomer);
 }

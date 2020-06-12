@@ -42,7 +42,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void update(Long id, Product model) {
+    public void update(Product model) {
 
     }
 

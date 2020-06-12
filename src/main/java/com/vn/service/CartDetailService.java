@@ -12,4 +12,10 @@ public interface CartDetailService {
     void save(Cart_detail cart_detail);
 
     void remove(Long id);
+
+    List<Cart_detail> findByCustomer(Long idCustomer);
+
+    void update(Cart_detail cart_detail);
+
+    void removeProduct(Long idCart, Long idProduct);
 }

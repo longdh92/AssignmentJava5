@@ -30,4 +30,9 @@ public class CartServiceImpl implements CartService {
     public void remove(Long id) {
         cartRepository.remove(id);
     }
+
+    @Override
+    public Cart findIdCart(Long idCustomer) {
+        return cartRepository.findIdCart(idCustomer);
+    }
 }

@@ -42,7 +42,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public void update(Long id, Category model) {
+    public void update(Category model) {
 
     }
 

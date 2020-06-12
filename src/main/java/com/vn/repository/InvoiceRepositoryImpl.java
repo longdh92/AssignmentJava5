@@ -42,7 +42,7 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public void update(Long id, Invoice model) {
+    public void update(Invoice model) {
 
     }
 

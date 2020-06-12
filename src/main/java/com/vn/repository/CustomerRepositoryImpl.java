@@ -42,7 +42,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public void update(Long id, Customer model) {
+    public void update(Customer model) {
 
     }
 
