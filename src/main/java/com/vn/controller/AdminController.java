@@ -3,6 +3,7 @@ package com.vn.controller;
 import com.vn.model.Admin;
 import com.vn.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping("/admin")
     public String index(HttpSession session, Model model) {
@@ -42,7 +46,9 @@ public class AdminController {
     }
 
     @GetMapping("/loginAdminView")
-    public String loginAdmin(@ModelAttribute(value = "admin") Admin admin, @CookieValue(value = "usernameAdmin", defaultValue = "") String usernameAdmin, @CookieValue(value = "passwordAdmin", defaultValue = "") String passwordAdmin, Model model) {
+    public String loginAdmin(@CookieValue(value = "usernameAdmin", defaultValue = "") String usernameAdmin,
+                             @CookieValue(value = "passwordAdmin", defaultValue = "") String passwordAdmin,
+                             Model model) {
         model.addAttribute("usernameAdmin", usernameAdmin);
         model.addAttribute("passwordAdmin", passwordAdmin);
         return "admin/login";
@@ -52,30 +58,26 @@ public class AdminController {
     public String loginAdmin(@ModelAttribute("admin") Admin admin, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
         admin.setIdAdmin(adminService.findByName(admin.getUsernameAdmin()).getIdAdmin());
         List<Admin> list = adminService.findAll();
-        Cookie usernameAdmin = new Cookie("usernameAdmin", admin.getUsernameAdmin());
-        Cookie passwordAdmin = new Cookie("passwordAdmin", admin.getPasswordAdmin());
         for (Admin admin1 : list) {
             if (admin.getUsernameAdmin().equals(admin1.getUsernameAdmin())) {
                 if (admin.getPasswordAdmin().equals(admin1.getPasswordAdmin())) {
+                    Cookie usernameAdmin = new Cookie("usernameAdmin", admin.getUsernameAdmin());
+                    Cookie passwordAdmin = new Cookie("passwordAdmin", admin.getPasswordAdmin());
                     if (request.getParameter("rememberAdmin") != null) {
                         usernameAdmin.setMaxAge(3600);
-                        response.addCookie(usernameAdmin);
                         passwordAdmin.setMaxAge(3600);
-                        response.addCookie(passwordAdmin);
-                        model.addAttribute("usernameAdmin", usernameAdmin);
-                        model.addAttribute("passwordAdmin", passwordAdmin);
-                        session.setAttribute("admin", admin);
-                        return "admin/admin";
+//                        model.addAttribute("usernameAdmin", usernameAdmin);
+//                        model.addAttribute("passwordAdmin", passwordAdmin);
                     } else {
                         usernameAdmin.setMaxAge(0);
-                        response.addCookie(usernameAdmin);
                         passwordAdmin.setMaxAge(0);
-                        response.addCookie(passwordAdmin);
-                        model.addAttribute("usernameAdmin", usernameAdmin);
-                        model.addAttribute("passwordAdmin", passwordAdmin);
-                        session.setAttribute("admin", admin);
-                        return "admin/admin";
+//                        model.addAttribute("usernameAdmin", usernameAdmin);
+//                        model.addAttribute("passwordAdmin", passwordAdmin);
                     }
+                    response.addCookie(usernameAdmin);
+                    response.addCookie(passwordAdmin);
+                    session.setAttribute("admin", admin);
+                    return "admin/admin";
                 } else {
                     model.addAttribute("message", "Invalid password !");
                     model.addAttribute("alert", "alert alert-danger");

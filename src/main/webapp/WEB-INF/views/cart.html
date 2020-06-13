@@ -5,7 +5,7 @@
 </head>
 
 <body>
-<header th:replace="fragments/header :: header"></header>
+<header th:replace="fragments/header :: header(${customer})"></header>
 <section id="cart_items">
     <div class="container">
         <div class="breadcrumbs">

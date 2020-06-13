@@ -28,7 +28,8 @@
                                         <div class="custom-control custom-checkbox"><input class="custom-control-input"
                                                                                            id="rememberPasswordCheck"
                                                                                            type="checkbox"
-                                                                                           name="rememberAdmin"/><label
+                                                                                           name="rememberAdmin"
+                                                                                           th:checked="${usernameAdmin}"/><label
                                                 class="custom-control-label" for="rememberPasswordCheck">Remember
                                             password</label></div>
                                     </div>
@@ -44,7 +45,8 @@
                                 </form>
                             </div>
                             <div class="card-footer text-center">
-                                <div class="small"><a href="/admin/registerAdminView">Need an account? Sign up!</a></div>
+                                <div class="small"><a href="/admin/registerAdminView">Need an account? Sign up!</a>
+                                </div>
                             </div>
                         </div>
                     </div>
