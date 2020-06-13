@@ -37,9 +37,12 @@ public class CartController {
     public String cartView(HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
+            model.addAttribute("customer", new Customer());
+            model.addAttribute("emailCustomer", "");
             return "loginUser";
+        } else {
+            model.addAttribute("customer", customer);
         }
-        model.addAttribute("customer", customer);
 
         TreeMap<Product, Integer> productTreeMap = new TreeMap<Product, Integer>(
                 new Comparator<Product>() {
