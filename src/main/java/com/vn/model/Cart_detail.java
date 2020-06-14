@@ -7,12 +7,12 @@ import java.io.Serializable;
 @Table(name = "cart_detail")
 public class Cart_detail implements Serializable {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idCart")
     @Id
     private Cart idCart;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idProduct")
     @Id
     private Product idProduct;

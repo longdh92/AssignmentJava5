@@ -34,7 +34,8 @@ public class Product implements Serializable {
     @JoinColumn(name = "idCategory")
     private Category idCategory;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct", fetch = FetchType.EAGER)
     private Set<Cart_detail> cart_details;
 
     @Override

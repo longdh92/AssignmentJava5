@@ -83,6 +83,7 @@ public class HomeController {
                     model.addAttribute("message", "Wrong password !");
                     model.addAttribute("alert", "alert alert-danger");
                     model.addAttribute("emailCustomer", emailCustomer1);
+                    model.addAttribute("customer", new Customer());
                     return "/loginUser";
                 }
             } else {
@@ -92,6 +93,7 @@ public class HomeController {
         model.addAttribute("message", "Can not find this email address !");
         model.addAttribute("alert", "alert alert-danger");
         model.addAttribute("emailCustomer", emailCustomer1);
+        model.addAttribute("customer", new Customer());
         return "/loginUser";
     }
 
@@ -133,10 +135,12 @@ public class HomeController {
         model.addAttribute("passwordCustomer", passwordCustomer);
 
         String validate = validateSignup(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
-                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"));
+                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"), "loginUser");
         if (validate.length() > 0) {
             return validate;
         }
+
+        customer.setStatus("");
 
         customerService.save(customer);
 
@@ -146,34 +150,39 @@ public class HomeController {
     }
 
     public String validateSignup(Model model, Customer customer, String emailCustomer, String customerName,
-                                 String phone, String gender, String passwordCustomer, String confirmPassword) {
+                                 String phone, String gender, String passwordCustomer, String confirmPassword, String view) {
         List<Customer> customerList = customerService.findAll();
         for (Customer customer1 : customerList) {
             if (emailCustomer.equalsIgnoreCase(customer1.getEmailCustomer())) {
                 model.addAttribute("message1", "This Email Address Is Taken !");
                 model.addAttribute("alert1", "alert alert-danger");
-                return "loginUser";
+                return view;
             }
         }
+        return validateUpdate(model, customer, emailCustomer, customerName, phone, gender, passwordCustomer, confirmPassword, view);
+    }
+
+    public String validateUpdate(Model model, Customer customer, String emailCustomer, String customerName,
+                                 String phone, String gender, String passwordCustomer, String confirmPassword, String view) {
         if (!emailCustomer.matches("\\w+@\\w+(\\.\\w+){1,2}")) {
             model.addAttribute("message1", "Invalid Email Address !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         }
         if (!customerName.matches("^[a-zA-Z\\s\\p{L}]+")) {
             model.addAttribute("message1", "Only Alphabet and White Space Characters !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         }
         if (!phone.matches("0\\d{9}")) {
             model.addAttribute("message1", "Invalid Phone Number !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         }
         if (gender == null) {
             model.addAttribute("message1", "Choose your gender !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         } else if (gender.equalsIgnoreCase("male")) {
             customer.setGender(true);
         } else {
@@ -182,12 +191,42 @@ public class HomeController {
         if (passwordCustomer.trim().length() < 3) {
             model.addAttribute("message1", "Password at least 3 letters !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         } else if (!passwordCustomer.equals(confirmPassword)) {
             model.addAttribute("message1", "Password and confirm password are not match !");
             model.addAttribute("alert1", "alert alert-danger");
-            return "loginUser";
+            return view;
         }
         return "";
+    }
+
+    @RequestMapping("/updateCustomerView")
+    public String updateCustomerView(HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        model.addAttribute("customer", customer);
+
+        return "updateUser";
+    }
+
+    @PostMapping("/updateCustomer")
+    public String updateCustomer(HttpSession session, Model model, Customer customer, HttpServletRequest request,
+                                 @RequestParam(name = "genderCustomer", required = false) String gender) {
+        Customer customer1 = (Customer) session.getAttribute("customer");
+        model.addAttribute("customer", customer1);
+
+        String validate = validateUpdate(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
+                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"), "updateUser");
+        if (validate.length() > 0) {
+            return validate;
+        }
+
+        customer.setIdCustomer(customer1.getIdCustomer());
+        session.setAttribute("customer", customer);
+        model.addAttribute("customer", customer);
+        customerService.save(customer);
+
+        model.addAttribute("message1", "Update Successfully !");
+        model.addAttribute("alert1", "alert alert-success");
+        return "updateUser";
     }
 }

@@ -65,4 +65,12 @@ public class CartDetailRepositoryImpl implements CartDetailRepository {
         query.executeUpdate();
     }
 
+    @Override
+    public void removeCart(Long idCart) {
+        String hql = "delete from Cart_detail where idCart.idCart = :idCart";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("idCart", idCart);
+        query.executeUpdate();
+    }
+
 }

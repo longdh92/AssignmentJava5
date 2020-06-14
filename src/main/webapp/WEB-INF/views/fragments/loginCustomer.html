@@ -6,12 +6,9 @@
 <div class="login-form" th:fragment="loginUserForm(message, alert, emailCustomer, passwordCustomer)"><!--login form-->
     <h2>Login to your account</h2>
     <form action="/loginCustomer" method="post">
-        <input type="email" placeholder="Enter your email address" name="emailCustomer" th:value="${emailCustomer}"/>
-        <input type="password" placeholder="Enter your password" name="passwordCustomer" th:value="${passwordCustomer}"/>
-        <span>
-								<input type="checkbox" class="checkbox" name="rememberCustomer" th:checked="${emailCustomer.length() > 0}">
-								Keep me signed in
-							</span>
+        <input type="email" placeholder="Enter your email address" name="emailCustomer" th:value="${emailCustomer}" required />
+        <input type="password" placeholder="Enter your password" name="passwordCustomer" th:value="${passwordCustomer}" required />
+        <span><input type="checkbox" class="checkbox" name="rememberCustomer" th:checked="${emailCustomer.length() > 0}">Keep me signed in</span>
         <button type="submit" class="btn btn-default">Login</button>
         <br>
         <div th:class="${alert}">

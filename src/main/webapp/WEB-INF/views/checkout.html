@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: head">
-    <title id="title">Your Cart</title>
+    <title id="title">Checkout</title>
 </head>
 
 <body>
@@ -10,14 +10,51 @@
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li class="active">Shopping Cart</li>
+                <li><a href="/home">Home</a></li>
+                <li class="active">Check out</li>
             </ol>
         </div>
-        <div class="table-responsive cart_info">
-            <div th:class="${alert}">
-                <strong th:text="${message}"></strong>
+
+        <!--/register-req-->
+
+        <div class="shopper-informations">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="shopper-info">
+                        <p>Shopper Information</p>
+                        <form action="#" method="post">
+                            <input type="text" placeholder="Your name" name="yourname"
+                                   required="required"> <input type="text"
+                                                               placeholder="Phone Number" name="phone" required="required">
+                            <input type="email" placeholder="Email" name="email"
+                                   required="required"> <input type="text"
+                                                               placeholder="Address" name="address" required="required">
+                            <input type="hidden" name="total" value=""> <a
+                                class="btn btn-primary"
+                                href="#">Cancel
+                            Purchase</a>
+                            <button class="btn btn-primary" type="submit" name="command"
+                                    value="checkOut">Payment Confirm</button>
+                            <br>
+                            <br>
+<!--                            <c:if test="${not empty message}">-->
+                            <!--                                <div class="alert alert-${alert}">-->
+                            <!--                                    <strong>${message}</strong>-->
+                            <!--                                </div>-->
+                            <!--                            </c:if>-->
+                        </form>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="review-payment">
+            <h2>Review & Payment</h2>
+        </div>
+
+        <div class="table-responsive cart_info">
+<!--            <div th:class="${alert}">-->
+            <!--                <strong th:text="${message}"></strong>-->
+            <!--            </div>-->
             <table class="table table-condensed">
                 <thead>
                 <tr class="cart_menu">
@@ -62,33 +99,11 @@
                                 class="fa fa-times"></i></a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a class="btn btn-default update" href="/home">Continue Shopping</a></td>
-                    <td><a class="btn btn-default update" href="/removeCart">Remove Cart</a></td>
-                </tr>
                 </tbody>
             </table>
         </div>
     </div>
-</section> <!--/#cart_items-->
-
-<section id="do_action">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="total_area">
-                    <ul>
-                        <li>Cart Sub Total <span>$59</span></li>
-                        <li>Eco Tax <span>$2</span></li>
-                        <li>Shipping Cost <span>Free</span></li>
-                        <li>Total <span>$61</span></li>
-                    </ul>
-                    <a class="btn btn-default check_out" href="/checkoutView">Check Out</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section><!--/#do_action-->
+</section>
 <footer th:replace="fragments/footer :: footer"></footer>
 <div th:replace="fragments/header :: script"></div>
 </body>

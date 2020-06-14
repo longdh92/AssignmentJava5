@@ -7,7 +7,6 @@ import com.vn.service.CartDetailService;
 import com.vn.service.CartService;
 import com.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -31,42 +30,12 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @RequestMapping("/cart")
     public String cartView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
                            @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
                            HttpSession session,
                            Model model) {
-        Customer customer = (Customer) session.getAttribute("customer");
-        if (customer == null) {
-            model.addAttribute("customer", new Customer());
-            model.addAttribute("emailCustomer", emailCustomer);
-            model.addAttribute("passwordCustomer", passwordCustomer);
-            return "loginUser";
-        } else {
-            model.addAttribute("customer", customer);
-        }
-
-        TreeMap<Product, Integer> productTreeMap = new TreeMap<Product, Integer>(
-                new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return o1.getIdProduct().compareTo(o2.getIdProduct());
-                    }
-                }
-        );
-
-        List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
-        for (Cart_detail cart_detail : cart_details) {
-            productTreeMap.put(cart_detail.getIdProduct(), cart_detail.getQuantity());
-        }
-
-        model.addAttribute("entry", productTreeMap.entrySet());
-        model.addAttribute("idCart", cartService.findIdCart(customer.getIdCustomer()));
-
-        return "cart";
+        return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "cart");
     }
 
     @RequestMapping("/addToCart/{idProduct}")
@@ -150,5 +119,54 @@ public class CartController {
         model.addAttribute("alert", "alert alert-success");
 
         return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
+    }
+
+    @RequestMapping("/checkoutView")
+    public String checkoutView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                               @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                               HttpSession session, Model model) {
+        return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
+    }
+
+    @RequestMapping("/removeCart")
+    public String removeCart(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                             @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                             HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        Long idCart = cartService.findIdCart(customer.getIdCustomer()).getIdCart();
+        cartDetailService.removeCart(idCart);
+        model.addAttribute("message", "Remove Successfully !");
+        model.addAttribute("alert", "alert alert-success");
+        return cartView(emailCustomer, passwordCustomer, session, model);
+    }
+
+    public String cartAndCheckout(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                                  @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                                  HttpSession session, Model model, String view) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            model.addAttribute("customer", new Customer());
+            model.addAttribute("emailCustomer", emailCustomer);
+            model.addAttribute("passwordCustomer", passwordCustomer);
+            return "loginUser";
+        } else {
+            model.addAttribute("customer", customer);
+        }
+
+        TreeMap<Product, Integer> productTreeMap = new TreeMap<Product, Integer>(
+                new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return o1.getIdProduct().compareTo(o2.getIdProduct());
+                    }
+                }
+        );
+        List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
+        for (Cart_detail cart_detail : cart_details) {
+            productTreeMap.put(cart_detail.getIdProduct(), cart_detail.getQuantity());
+        }
+        model.addAttribute("entry", productTreeMap.entrySet());
+        model.addAttribute("idCart", cartService.findIdCart(customer.getIdCustomer()));
+        return view;
     }
 }

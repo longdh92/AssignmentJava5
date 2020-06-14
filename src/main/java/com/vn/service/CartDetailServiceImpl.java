@@ -46,4 +46,9 @@ public class CartDetailServiceImpl implements CartDetailService {
         cartDetailRepository.removeProduct(idCart, idProduct);
     }
 
+    @Override
+    public void removeCart(Long idCart) {
+        cartDetailRepository.removeCart(idCart);
+    }
+
 }

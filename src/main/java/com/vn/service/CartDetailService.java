@@ -18,4 +18,6 @@ public interface CartDetailService {
     void update(Cart_detail cart_detail);
 
     void removeProduct(Long idCart, Long idProduct);
+
+    void removeCart(Long idCart);
 }
