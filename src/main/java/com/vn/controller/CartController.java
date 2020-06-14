@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,11 +35,15 @@ public class CartController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping("/cart")
-    public String cartView(HttpSession session, Model model) {
+    public String cartView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                           @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                           HttpSession session,
+                           Model model) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             model.addAttribute("customer", new Customer());
-            model.addAttribute("emailCustomer", "");
+            model.addAttribute("emailCustomer", emailCustomer);
+            model.addAttribute("passwordCustomer", passwordCustomer);
             return "loginUser";
         } else {
             model.addAttribute("customer", customer);
@@ -80,7 +85,7 @@ public class CartController {
             if (cart_detail.getIdProduct().getIdProduct() == id) {
                 cart_detail.setQuantity(cart_detail.getQuantity() + 1);
                 cartDetailService.update(cart_detail);
-                return cartView(session, model);
+                return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
             }
         }
         Cart_detail cart_detail = new Cart_detail();
@@ -89,7 +94,7 @@ public class CartController {
         cart_detail.setIdCart(cartService.findIdCart(customer.getIdCustomer()));
         cartDetailService.save(cart_detail);
 
-        return cartView(session, model);
+        return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
     }
 
     @RequestMapping("/plusProduct/{idProduct}")
@@ -104,11 +109,11 @@ public class CartController {
             if (cart_detail.getIdProduct().getIdProduct() == idP) {
                 cart_detail.setQuantity(cart_detail.getQuantity() + 1);
                 cartDetailService.update(cart_detail);
-                return cartView(session, model);
+                return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
             }
         }
 
-        return cartView(session, model);
+        return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
     }
 
     @RequestMapping("/minusProduct/{idProduct}")
@@ -126,15 +131,17 @@ public class CartController {
                 if (cart_detail.getQuantity() == 0) {
                     return removeProduct(idProduct, (cartService.findIdCart(customer.getIdCustomer()).getIdCart() * 4 + 74) / 2, session, model);
                 }
-                return cartView(session, model);
+                return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
             }
         }
 
-        return cartView(session, model);
+        return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
     }
 
     @RequestMapping("/removeProduct/{idProduct}/{idCart}")
     public String removeProduct(@PathVariable(name = "idProduct") Long idProduct, @PathVariable(name = "idCart") Long idCart, HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+
         Long idP = (idProduct * 2 - 74) / 4;
         Long idC = (idCart * 2 - 74) / 4;
 
@@ -142,6 +149,6 @@ public class CartController {
         model.addAttribute("message", "Remove Successfully !");
         model.addAttribute("alert", "alert alert-success");
 
-        return cartView(session, model);
+        return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
     }
 }

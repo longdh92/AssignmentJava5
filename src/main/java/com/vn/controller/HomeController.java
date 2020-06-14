@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,8 @@ public class HomeController {
     }
 
     @PostMapping("/loginCustomer")
-    public String loginCustomer(Customer customer, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String loginCustomer(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer1,
+                                Customer customer, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
         List<Customer> customerList = customerService.findAll();
         for (Customer customer1 : customerList) {
             if (customer1.getEmailCustomer().equalsIgnoreCase(customer.getEmailCustomer().trim())) {
@@ -80,6 +82,7 @@ public class HomeController {
                 } else {
                     model.addAttribute("message", "Wrong password !");
                     model.addAttribute("alert", "alert alert-danger");
+                    model.addAttribute("emailCustomer", emailCustomer1);
                     return "/loginUser";
                 }
             } else {
@@ -88,6 +91,7 @@ public class HomeController {
         }
         model.addAttribute("message", "Can not find this email address !");
         model.addAttribute("alert", "alert alert-danger");
+        model.addAttribute("emailCustomer", emailCustomer1);
         return "/loginUser";
     }
 
@@ -116,5 +120,74 @@ public class HomeController {
             customer.setEmailCustomer("");
         }
         return customer;
+    }
+
+    @RequestMapping("/signupCustomer")
+    public String signupCustomer(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                                 @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                                 @RequestParam(name = "genderCustomer", required = false) String gender,
+                                 Customer customer, Model model, HttpServletRequest request) {
+
+        model.addAttribute("customer", new Customer());
+        model.addAttribute("emailCustomer", emailCustomer);
+        model.addAttribute("passwordCustomer", passwordCustomer);
+
+        String validate = validateSignup(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
+                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"));
+        if (validate.length() > 0) {
+            return validate;
+        }
+
+        customerService.save(customer);
+
+        model.addAttribute("message1", "Register Successfully !");
+        model.addAttribute("alert1", "alert alert-success");
+        return "loginUser";
+    }
+
+    public String validateSignup(Model model, Customer customer, String emailCustomer, String customerName,
+                                 String phone, String gender, String passwordCustomer, String confirmPassword) {
+        List<Customer> customerList = customerService.findAll();
+        for (Customer customer1 : customerList) {
+            if (emailCustomer.equalsIgnoreCase(customer1.getEmailCustomer())) {
+                model.addAttribute("message1", "This Email Address Is Taken !");
+                model.addAttribute("alert1", "alert alert-danger");
+                return "loginUser";
+            }
+        }
+        if (!emailCustomer.matches("\\w+@\\w+(\\.\\w+){1,2}")) {
+            model.addAttribute("message1", "Invalid Email Address !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        }
+        if (!customerName.matches("^[a-zA-Z\\s\\p{L}]+")) {
+            model.addAttribute("message1", "Only Alphabet and White Space Characters !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        }
+        if (!phone.matches("0\\d{9}")) {
+            model.addAttribute("message1", "Invalid Phone Number !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        }
+        if (gender == null) {
+            model.addAttribute("message1", "Choose your gender !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        } else if (gender.equalsIgnoreCase("male")) {
+            customer.setGender(true);
+        } else {
+            customer.setGender(false);
+        }
+        if (passwordCustomer.trim().length() < 3) {
+            model.addAttribute("message1", "Password at least 3 letters !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        } else if (!passwordCustomer.equals(confirmPassword)) {
+            model.addAttribute("message1", "Password and confirm password are not match !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "loginUser";
+        }
+        return "";
     }
 }

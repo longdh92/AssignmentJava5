@@ -3,13 +3,24 @@
 <head th:replace="fragments/header :: head">
 </head>
 <body>
-<div class="signup-form" th:fragment="signupUserForm"><!--sign up form-->
+<div class="signup-form" th:fragment="signupUserForm(alert1, message1)"><!--sign up form-->
     <h2>New User Signup!</h2>
-    <form action="#">
-        <input type="text" placeholder="Name"/>
-        <input type="email" placeholder="Email Address"/>
-        <input type="password" placeholder="Password"/>
-        <button type="submit" class="btn btn-default">Signup</button>
+    <form action="/signupCustomer" method="post">
+        <input type="email" placeholder="Email Address" name="emailCustomer" required/>
+        <input type="text" placeholder="Enter Your Name" name="customerName" required/>
+        <input type="text" placeholder="Phone Number" name="phone" required/>
+        <select name="genderCustomer">
+            <option disabled selected>Select your gender</option>
+            <option th:value="male">Male</option>
+            <option th:value="female">Female</option>
+        </select><br><br>
+        <textarea placeholder="Enter Your Address" name="address" required></textarea><br><br>
+        <input type="password" placeholder="Password" name="passwordCustomer" required/>
+        <input type="password" placeholder="Confirm Password" name="confirm" required/>
+        <button type="submit" class="btn btn-default">Signup</button><br><br>
+        <div th:class="${alert1}">
+            <strong th:text="${message1}"></strong>
+        </div>
     </form>
 </div><!--/sign up form-->
 </body>
