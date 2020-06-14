@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 @Controller
@@ -162,11 +163,15 @@ public class CartController {
                 }
         );
         List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
+        double total = 0;
         for (Cart_detail cart_detail : cart_details) {
             productTreeMap.put(cart_detail.getIdProduct(), cart_detail.getQuantity());
+            total += cart_detail.getQuantity() * cart_detail.getIdProduct().getPrice();
         }
         model.addAttribute("entry", productTreeMap.entrySet());
         model.addAttribute("idCart", cartService.findIdCart(customer.getIdCustomer()));
+        model.addAttribute("total", total);
+
         return view;
     }
 }
