@@ -40,6 +40,8 @@ public class CartController {
     public String addToCart(@PathVariable(name = "idProduct") Long idProduct, HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
+            model.addAttribute("customer", new Customer());
+            model.addAttribute("emailCustomer", "");
             return "loginUser";
         }
         model.addAttribute("customer", customer);
