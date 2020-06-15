@@ -32,7 +32,10 @@ public class Invoice implements Serializable {
     private Date date;
 
     @Column(name = "total")
-    private int total;
+    private double total;
+
+    @Column(name = "phone")
+    private String phone;
 
     public Long getIdInvoice() {
         return idInvoice;
@@ -90,11 +93,19 @@ public class Invoice implements Serializable {
         this.date = date;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(double total) {
         this.total = total;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

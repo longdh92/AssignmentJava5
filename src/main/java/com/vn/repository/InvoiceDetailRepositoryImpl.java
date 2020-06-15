@@ -28,12 +28,7 @@ public class InvoiceDetailRepositoryImpl implements InvoiceDetailRepository {
 
     @Override
     public void save(Invoice_detail model) {
-        if (model.getIdInvoice() != null && model.getIdProduct() != null) {
-            // Update theo ID
-            entityManager.merge(model);
-        } else {
-            entityManager.persist(model);
-        }
+        entityManager.persist(model);
     }
 
     @Override
@@ -43,7 +38,7 @@ public class InvoiceDetailRepositoryImpl implements InvoiceDetailRepository {
 
     @Override
     public void update(Invoice_detail model) {
-
+        entityManager.persist(model);
     }
 
     @Override

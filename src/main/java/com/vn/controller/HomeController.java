@@ -1,10 +1,13 @@
 package com.vn.controller;
 
+import com.vn.model.Category;
 import com.vn.model.Customer;
+import com.vn.repository.ProductRepository1;
 import com.vn.service.CategoryService;
 import com.vn.service.CustomerService;
 import com.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -22,24 +25,31 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private CategoryService categoryService;
 
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private ProductRepository1 productRepository1;
+
     @RequestMapping("/home")
-    public String home(Model model, HttpSession session) {
+    public String home(Model model, HttpSession session,
+                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(defaultValue = "") String categoryName) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             model.addAttribute("customer", new Customer());
         } else {
             model.addAttribute("customer", customer);
         }
-        model.addAttribute("productList", productService.findAll());
+        if (categoryName.length() == 0) {
+            model.addAttribute("productList", productRepository1.findAll(PageRequest.of(page, 6)));
+        } else {
+            model.addAttribute("productList", productRepository1.findByCategory(categoryName, PageRequest.of(page, 6)));
+        }
         model.addAttribute("categoryList", categoryService.findAll());
+        model.addAttribute("categoryName", categoryName);
         return "index";
     }
 
@@ -78,7 +88,7 @@ public class HomeController {
                     response.addCookie(emailCustomer);
                     response.addCookie(passwordCustomer);
                     session.setAttribute("customer", customer1);
-                    return home(model, session);
+                    return home(model, session, 0, "");
                 } else {
                     model.addAttribute("message", "Wrong password !");
                     model.addAttribute("alert", "alert alert-danger");

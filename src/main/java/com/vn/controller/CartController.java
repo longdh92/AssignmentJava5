@@ -1,23 +1,14 @@
 package com.vn.controller;
 
-import com.vn.model.Cart_detail;
-import com.vn.model.Customer;
-import com.vn.model.Product;
-import com.vn.service.CartDetailService;
-import com.vn.service.CartService;
-import com.vn.service.ProductService;
+import com.vn.model.*;
+import com.vn.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Controller
 public class CartController {
@@ -30,6 +21,12 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private InvoiceService invoiceService;
+
+    @Autowired
+    private InvoiceDetailService invoiceDetailService;
 
     @RequestMapping("/cart")
     public String cartView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
@@ -127,6 +124,69 @@ public class CartController {
                                @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
                                HttpSession session, Model model) {
         return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
+    }
+
+    @PostMapping("/checkout/{total}")
+    public String checkout(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                           @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                           HttpSession session, Model model, Customer customer1,
+                           @PathVariable(name = "total", required = false) double total) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
+        if (cart_details.size() == 0) {
+            model.addAttribute("message", "Empty Cart !");
+            model.addAttribute("alert", "alert alert-danger");
+            return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
+        }
+        String validateCheckout = validateCheckout(model, customer1.getEmailCustomer(), customer1.getCustomerName(), customer1.getPhone(), "checkout");
+        if (validateCheckout.length() > 0) {
+            return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
+        }
+
+        Invoice invoice = new Invoice();
+        invoice.setAddress(customer1.getAddress());
+        invoice.setCustomerName(customer1.getCustomerName());
+        invoice.setDate(new Date());
+        invoice.setEmailCustomer(customer1.getEmailCustomer());
+        invoice.setPhone(customer1.getPhone());
+        invoice.setTotal(total);
+        invoice.setIdCustomer(customer);
+        invoiceService.save(invoice);
+
+        for (Cart_detail cart_detail : cart_details) {
+            Invoice_detail invoice_detail = new Invoice_detail();
+            invoice_detail.setQuantity(cart_detail.getQuantity());
+            invoice_detail.setIdInvoice(invoice);
+            invoice_detail.setIdProduct(cart_detail.getIdProduct());
+            invoiceDetailService.save(invoice_detail);
+        }
+
+        Long idCart = cartService.findIdCart(customer.getIdCustomer()).getIdCart();
+        cartDetailService.removeCart(idCart);
+
+        model.addAttribute("message", "Order Completed Successfully !");
+        model.addAttribute("alert", "alert alert-success");
+
+        return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
+    }
+
+    public String validateCheckout(Model model, String emailCustomer, String customerName, String phone, String view) {
+        if (!emailCustomer.matches("\\w+@\\w+(\\.\\w+){1,2}")) {
+            model.addAttribute("message", "Invalid Email Address !");
+            model.addAttribute("alert", "alert alert-danger");
+            return view;
+        }
+        if (!customerName.matches("^[a-zA-Z\\s\\p{L}]+")) {
+            model.addAttribute("message", "Only Alphabet and White Space Characters !");
+            model.addAttribute("alert", "alert alert-danger");
+            return view;
+        }
+        if (!phone.matches("0\\d{9}")) {
+            model.addAttribute("message", "Invalid Phone Number !");
+            model.addAttribute("alert", "alert alert-danger");
+            return view;
+        }
+        return "";
     }
 
     @RequestMapping("/removeCart")

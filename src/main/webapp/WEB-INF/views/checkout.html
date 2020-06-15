@@ -21,27 +21,26 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="shopper-info">
-                        <p>Shopper Information</p>
-                        <form action="#" method="post">
-                            <input type="text" placeholder="Your name" name="yourname"
-                                   required="required"> <input type="text"
-                                                               placeholder="Phone Number" name="phone" required="required">
-                            <input type="email" placeholder="Email" name="email"
-                                   required="required"> <input type="text"
-                                                               placeholder="Address" name="address" required="required">
-                            <input type="hidden" name="total" value=""> <a
-                                class="btn btn-primary"
-                                href="#">Cancel
-                            Purchase</a>
+                        <p>Confirm Your Information</p>
+                        <form th:action="@{'/checkout/' + ${total}}" method="post">
+                            <input type="email" placeholder="Email Address" name="emailCustomer" required
+                                   th:value="${customer.getEmailCustomer()}"/>
+                            <input type="text" placeholder="Enter Your Name" name="customerName" required
+                                   th:value="${customer.getCustomerName()}"/>
+                            <input type="text" placeholder="Phone Number" name="phone" required
+                                   th:value="${customer.getPhone()}"/>
+                            <textarea placeholder="Enter Your Address" name="address" required
+                                      th:text="${customer.getAddress()}"></textarea><br><br>
+                            <a class="btn btn-primary" href="/cart">Cancel
+                                Purchase</a>
                             <button class="btn btn-primary" type="submit" name="command"
-                                    value="checkOut">Payment Confirm</button>
+                                    value="checkOut">Payment Confirm
+                            </button>
                             <br>
                             <br>
-<!--                            <c:if test="${not empty message}">-->
-                            <!--                                <div class="alert alert-${alert}">-->
-                            <!--                                    <strong>${message}</strong>-->
-                            <!--                                </div>-->
-                            <!--                            </c:if>-->
+                            <div th:class="${alert}">
+                                <strong th:text="${message}"></strong>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -52,7 +51,7 @@
         </div>
 
         <div class="table-responsive cart_info">
-<!--            <div th:class="${alert}">-->
+            <!--            <div th:class="${alert}">-->
             <!--                <strong th:text="${message}"></strong>-->
             <!--            </div>-->
             <table class="table table-condensed">
@@ -81,11 +80,13 @@
                     </td>
                     <td class="cart_quantity">
                         <div class="cart_quantity_button">
-                            <a class="cart_quantity_up" th:href="@{'/plusProduct/' + ${(entry.getKey().getIdProduct()*4+74)/2}}"> + </a>
+                            <a class="cart_quantity_up"
+                               th:href="@{'/plusProduct/' + ${(entry.getKey().getIdProduct()*4+74)/2}}"> + </a>
                             <input class="cart_quantity_input" type="text" name="quantity"
                                    th:value="${entry.getValue()}" autocomplete="off"
                                    size="2" readonly>
-                            <a class="cart_quantity_down" th:href="@{'/minusProduct/' + ${(entry.getKey().getIdProduct()*4+74)/2}}"> - </a>
+                            <a class="cart_quantity_down"
+                               th:href="@{'/minusProduct/' + ${(entry.getKey().getIdProduct()*4+74)/2}}"> - </a>
                         </div>
                         <br><br>
                         <p th:text="${'Available: ' + entry.getKey().getAmount()}"></p>

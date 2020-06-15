@@ -1,5 +1,6 @@
 package com.vn.repository;
 
+import com.vn.model.Category;
 import com.vn.model.Product;
 
 import javax.persistence.EntityManager;

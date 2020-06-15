@@ -3,24 +3,26 @@
 <head th:replace="fragments/header :: head">
 </head>
 <body>
-<div class="col-sm-9 padding-right" th:fragment="products(list)">
+<div class="col-sm-9 padding-right" th:fragment="products(list, categoryName)">
     <div class="features_items"><!--features_items-->
         <h2 class="title text-center">Features Items</h2>
-        <div class="col-sm-4" th:each="product : ${list}">
+        <div class="col-sm-4" th:each="product : ${list.content}">
             <div class="product-image-wrapper">
                 <div class="single-products">
                     <div class="productinfo text-center">
                         <img th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}" alt=""/>
                         <h2 th:text="${'$' + product.getPrice()}"></h2>
                         <p th:text="${product.getProductName()}"></p>
-                        <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
+                        <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}"
+                           class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
                             cart</a>
                     </div>
                     <div class="product-overlay">
                         <div class="overlay-content">
                             <h2 th:text="${'$' + product.getPrice()}"></h2>
                             <p th:text="${product.getProductName()}"></p>
-                            <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
+                            <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}"
+                               class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
                                 cart</a>
                         </div>
                     </div>
@@ -28,14 +30,20 @@
             </div>
         </div>
     </div><!--features_items-->
-    <ul class="pagination">
-        <li class="btn"><a href="#">1</a></li>
-        <li class="btn"><a href="#">2</a></li>
-        <li class="btn"><a href="#">3</a></li>
-        <li class="btn"><a href="#">4</a></li>
-        <li><a href="#">&raquo;</a></li>
-    </ul>
-
+    <th:block th:if="${list.totalPages > 0}">
+        <ul class="pagination">
+            <th:block th:if="${categoryName.length() == 0}">
+                <li><a th:href="@{/home(page=0)}">&laquo;</a></li>
+                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a th:href="@{/home(page=${i - 1})}" th:text="${i}"></a></li>
+                <li><a th:href="@{/home(page=${list.totalPages - 1})}">&raquo;</a></li>
+            </th:block>
+            <th:block th:if="${categoryName.length() > 0}">
+                <li><a th:href="@{/home(page=0, categoryName=${categoryName})}">&laquo;</a></li>
+                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a th:href="@{/home(page=${i - 1}, categoryName=${categoryName})}" th:text="${i}"></a></li>
+                <li><a th:href="@{/home(page=${list.totalPages - 1}, categoryName=${categoryName})}">&raquo;</a></li>
+            </th:block>
+        </ul>
+    </th:block>
 </div>
 </body>
 </html>
