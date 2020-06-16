@@ -36,11 +36,10 @@ public class AdminController {
 
     @RequestMapping("/adminList")
     public String adminList(HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         model.addAttribute("adminList", adminService.findAll());
         return "admin/adminList";
     }
@@ -55,8 +54,7 @@ public class AdminController {
     }
 
     @PostMapping("/loginAdmin")
-    public String loginAdmin(@ModelAttribute("admin") Admin admin, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
-        admin.setIdAdmin(adminService.findByName(admin.getUsernameAdmin()).getIdAdmin());
+    public String loginAdmin(Admin admin, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
         List<Admin> list = adminService.findAll();
         for (Admin admin1 : list) {
             if (admin.getUsernameAdmin().equals(admin1.getUsernameAdmin())) {
@@ -66,17 +64,14 @@ public class AdminController {
                     if (request.getParameter("rememberAdmin") != null) {
                         usernameAdmin.setMaxAge(3600);
                         passwordAdmin.setMaxAge(3600);
-//                        model.addAttribute("usernameAdmin", usernameAdmin);
-//                        model.addAttribute("passwordAdmin", passwordAdmin);
                     } else {
                         usernameAdmin.setMaxAge(0);
                         passwordAdmin.setMaxAge(0);
-//                        model.addAttribute("usernameAdmin", usernameAdmin);
-//                        model.addAttribute("passwordAdmin", passwordAdmin);
                     }
                     response.addCookie(usernameAdmin);
                     response.addCookie(passwordAdmin);
-                    session.setAttribute("admin", admin);
+                    session.setAttribute("admin", admin1);
+                    model.addAttribute("admin", admin1);
                     return "admin/admin";
                 } else {
                     model.addAttribute("message", "Invalid password !");
@@ -108,96 +103,107 @@ public class AdminController {
 
     @PostMapping("/registerAdmin")
     public String registerAdmin(Model model, HttpServletRequest request, Admin admin) {
-        String message = validateRegisterAdmin(admin, model, request.getParameter("confirmPassword"));
+        String message = validateRegisterAdmin(admin, model, request.getParameter("confirmPassword"), "admin/register");
         if (message.length() > 0) {
             return message;
         }
+        admin.setRole(false);
+        admin.setStatus("INACTIVE");
         adminService.save(admin);
         model.addAttribute("message", "Register Successful !");
         model.addAttribute("alert", "alert alert-success");
         return "admin/register";
     }
 
-    public String validateRegisterAdmin(Admin admin, Model model, String confirm) {
+    public String validateRegisterAdmin(Admin admin, Model model, String confirm, String view) {
         // Username
         if (!admin.getUsernameAdmin().matches("[a-zA-Z0-9]+")) {
             model.addAttribute("message", "Only alphabet characters and numbers !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/register";
+            return view;
         } else if (admin.getUsernameAdmin().trim().length() < 6) {
             model.addAttribute("message", "Username at least 6 letters !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/register";
+            return view;
         }
         List<Admin> list = adminService.findAll();
         for (Admin admin1 : list) {
             if (admin.getUsernameAdmin().equalsIgnoreCase(admin1.getUsernameAdmin())) {
                 model.addAttribute("message", "Can not use this username");
                 model.addAttribute("alert", "alert alert-danger");
-                return "admin/register";
+                return view;
             }
         }
+
+        return validateUpdateAdmin(admin, model, confirm, view);
+    }
+
+    public String validateUpdateAdmin(Admin admin, Model model, String confirm, String view) {
         // Email
         if (!admin.getEmailAdmin().matches("\\w+@\\w+(\\.\\w+){1,2}")) {
             model.addAttribute("message", "Invalid email address !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/register";
+            return view;
         }
         // Password
         if (admin.getPasswordAdmin().trim().length() < 3) {
             model.addAttribute("message", "Password at least 3 letters !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/register";
+            return view;
         } else if (!admin.getPasswordAdmin().equals(confirm)) {
             model.addAttribute("message", "Password and confirm are not match !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/register";
+            return view;
         }
 
         return "";
     }
 
-    public String validateUpdateAdmin(Admin admin, Model model, String confirm) {
-        // Email
-        if (!admin.getEmailAdmin().matches("\\w+@\\w+(\\.\\w+){1,2}")) {
-            model.addAttribute("message", "Invalid email address !");
-            model.addAttribute("alert", "alert alert-danger");
-            return "admin/editAdmin";
+    @GetMapping("/changePasswordView")
+    public String changePasswordView(Model model, HttpSession session) {
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        // Password
-        if (admin.getPasswordAdmin().trim().length() < 3) {
+        return "admin/changePassword";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(HttpSession session, Model model, HttpServletRequest request) {
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
+        }
+        String currentPassword = request.getParameter("currentPassword");
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (!currentPassword.equals(admin.getPasswordAdmin())) {
+            model.addAttribute("message", "Wrong password !");
+            model.addAttribute("alert", "alert alert-danger");
+            return "admin/changePassword";
+        }
+        String newPassword = request.getParameter("newPassword");
+        if (newPassword.length() < 3) {
             model.addAttribute("message", "Password at least 3 letters !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/editAdmin";
-        } else if (!admin.getPasswordAdmin().equals(confirm)) {
-            model.addAttribute("message", "Password and confirm are not match !");
+            return "admin/changePassword";
+        }
+        String confirmPassword = request.getParameter("confirmPassword");
+        if (!confirmPassword.equals(newPassword)) {
+            model.addAttribute("message", "Password and confirm password are not match !");
             model.addAttribute("alert", "alert alert-danger");
-            return "admin/editAdmin";
+            return "admin/changePassword";
         }
-
-        return "";
-    }
-
-    @GetMapping("/editAdminView/{idAdmin}")
-    public String editAdmin(@PathVariable(value = "idAdmin") Long idAdmin, Model model, HttpSession session) {
-        Admin admin1 = (Admin) session.getAttribute("admin");
-        if (admin1 == null) {
-            return "admin/login";
-        }
-        model.addAttribute("admin", admin1);
-        Long id = (idAdmin * 2 - 74) / 4;
-        Admin admin = adminService.findById(id);
-        model.addAttribute("admin1", admin);
-        return "admin/editAdmin";
+        model.addAttribute("message", "Change password successfully !");
+        model.addAttribute("alert", "alert alert-success");
+        return "admin/changePassword";
     }
 
     @GetMapping("/removeAdmin/{idAdmin}")
     public String removeAdmin(@PathVariable(value = "idAdmin") Long idAdmin, Model model, HttpSession session) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         Long id = (idAdmin * 2 - 74) / 4;
         if (((Admin) session.getAttribute("admin")).getIdAdmin() == id) {
             model.addAttribute("message", "Can not delete yourself !");
@@ -205,30 +211,30 @@ public class AdminController {
             model.addAttribute("adminList", adminService.findAll());
             return "admin/adminList";
         }
-        adminService.remove(id);
+        Admin admin = adminService.findById(id);
+        admin.setStatus("REMOVED");
+        adminService.save(admin);
         model.addAttribute("message", "Delete Admin Successful !");
         model.addAttribute("alert", "alert alert-success");
         model.addAttribute("adminList", adminService.findAll());
         return "admin/adminList";
     }
 
-    @PostMapping("/editAdmin")
-    public String editAdmin(Admin admin, Model model, HttpServletRequest request, HttpSession session) {
-        Admin admin1 = (Admin) session.getAttribute("admin");
-        if (admin1 == null) {
-            return "admin/login";
+    @RequestMapping("/setAdmin/{idAdmin}")
+    public String setAdmin(@PathVariable(value = "idAdmin") Long idAdmin, HttpSession session, Model model) {
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin1);
-        String message = validateUpdateAdmin(admin, model, request.getParameter("confirm"));
-        if (message.length() > 0) {
-            model.addAttribute("admin1", admin);
-            return message;
-        }
+        Long id = (idAdmin * 2 - 74) / 4;
+        Admin admin = adminService.findById(id);
+        admin.setRole(true);
+        admin.setStatus("ACTIVED");
         adminService.save(admin);
-        model.addAttribute("message", "Edit Successful !");
+        model.addAttribute("message", "Set Admin Successful !");
         model.addAttribute("alert", "alert alert-success");
-        model.addAttribute("admin1", admin);
-        return "admin/editAdmin";
+        model.addAttribute("adminList", adminService.findAll());
+        return "admin/adminList";
     }
 
     public Admin checkCookie(HttpServletRequest request) {
@@ -243,5 +249,17 @@ public class AdminController {
             }
         }
         return admin;
+    }
+
+    public String checkLogin(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        } else if (!admin.isRole() || !admin.getStatus().equalsIgnoreCase("ACTIVED")) {
+            model.addAttribute("admin", admin);
+            return "admin/admin";
+        }
+        model.addAttribute("admin", admin);
+        return "";
     }
 }

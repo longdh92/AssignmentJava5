@@ -1,11 +1,9 @@
 package com.vn.controller;
 
-import com.vn.model.Category;
 import com.vn.model.Customer;
 import com.vn.repository.ProductRepository1;
 import com.vn.service.CategoryService;
 import com.vn.service.CustomerService;
-import com.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;

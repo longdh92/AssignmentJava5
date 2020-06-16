@@ -3,7 +3,7 @@
 <head th:replace="fragments/header :: head">
 </head>
 <body>
-<div class="col-sm-9 padding-right" th:fragment="products(list, categoryName)">
+<div class="col-sm-9 padding-right" th:fragment="products(list, categoryName, productName)">
     <div class="features_items"><!--features_items-->
         <h2 class="title text-center">Features Items</h2>
         <div class="col-sm-4" th:each="product : ${list.content}">
@@ -32,15 +32,23 @@
     </div><!--features_items-->
     <th:block th:if="${list.totalPages > 0}">
         <ul class="pagination">
-            <th:block th:if="${categoryName.length() == 0}">
+            <th:block th:if="${categoryName.length() == 0 && productName.length() == 0}">
                 <li><a th:href="@{/home(page=0)}">&laquo;</a></li>
-                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a th:href="@{/home(page=${i - 1})}" th:text="${i}"></a></li>
+                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a
+                        th:href="@{/home(page=${i - 1})}" th:text="${i}"></a></li>
                 <li><a th:href="@{/home(page=${list.totalPages - 1})}">&raquo;</a></li>
             </th:block>
             <th:block th:if="${categoryName.length() > 0}">
                 <li><a th:href="@{/home(page=0, categoryName=${categoryName})}">&laquo;</a></li>
-                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a th:href="@{/home(page=${i - 1}, categoryName=${categoryName})}" th:text="${i}"></a></li>
+                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a
+                        th:href="@{/home(page=${i - 1}, categoryName=${categoryName})}" th:text="${i}"></a></li>
                 <li><a th:href="@{/home(page=${list.totalPages - 1}, categoryName=${categoryName})}">&raquo;</a></li>
+            </th:block>
+            <th:block th:if="${productName.length() > 0}">
+                <li><a th:href="@{/home(page=0, productName=${productName})}">&laquo;</a></li>
+                <li class="btn" th:each="i : ${#numbers.sequence(1, list.totalPages)}"><a
+                        th:href="@{/home(page=${i - 1}, productName=${productName})}" th:text="${i}"></a></li>
+                <li><a th:href="@{/home(page=${list.totalPages - 1}, productName=${productName})}">&raquo;</a></li>
             </th:block>
         </ul>
     </th:block>

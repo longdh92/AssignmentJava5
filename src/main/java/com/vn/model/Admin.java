@@ -23,6 +23,9 @@ public class Admin implements Serializable {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "role")
+    private boolean role;
+
     @Override
     public String toString() {
         return "Admin{" +
@@ -60,5 +63,21 @@ public class Admin implements Serializable {
 
     public void setEmailAdmin(String emailAdmin) {
         this.emailAdmin = emailAdmin;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isRole() {
+        return role;
+    }
+
+    public void setRole(boolean role) {
+        this.role = role;
     }
 }
