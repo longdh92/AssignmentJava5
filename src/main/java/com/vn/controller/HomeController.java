@@ -36,20 +36,26 @@ public class HomeController {
     @RequestMapping("/home")
     public String home(Model model, HttpSession session,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "") String categoryName) {
+                       @RequestParam(defaultValue = "") String categoryName,
+                       @RequestParam(name = "productName", defaultValue = "") String productName) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             model.addAttribute("customer", new Customer());
         } else {
             model.addAttribute("customer", customer);
         }
-        if (categoryName.length() == 0) {
+
+        if (categoryName.length() == 0 && productName.length() == 0) {
             model.addAttribute("productList", productRepository1.findAll(PageRequest.of(page, 6)));
-        } else {
+        } else if (categoryName.length() > 0) {
             model.addAttribute("productList", productRepository1.findByCategory(categoryName, PageRequest.of(page, 6)));
+        } else if (productName.length() > 0) {
+            model.addAttribute("productList", productRepository1.findByProductName(productName, PageRequest.of(page, 6)));
         }
+
         model.addAttribute("categoryList", categoryService.findAll());
         model.addAttribute("categoryName", categoryName);
+        model.addAttribute("productName", productName);
         return "index";
     }
 
@@ -88,7 +94,7 @@ public class HomeController {
                     response.addCookie(emailCustomer);
                     response.addCookie(passwordCustomer);
                     session.setAttribute("customer", customer1);
-                    return home(model, session, 0, "");
+                    return home(model, session, 0, "", "");
                 } else {
                     model.addAttribute("message", "Wrong password !");
                     model.addAttribute("alert", "alert alert-danger");

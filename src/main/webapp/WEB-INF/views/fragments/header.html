@@ -121,9 +121,8 @@
                             <li><a href="/" class="active">Home</a></li>
                             <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
-                                    <li><a href="#">Checkout</a></li>
+                                    <li><a href="/checkoutView">Checkout</a></li>
                                     <li><a href="/cart">Cart</a></li>
-                                    <li><a href="#">Login</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -131,8 +130,10 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="search_box pull-right">
-                        <input type="text" placeholder="Search"/>
-                        <button class="btn btn-default">Search</button>
+                        <form action="/home">
+                            <input type="text" placeholder="Product's name" name="productName"/>
+                            <button class="btn btn-default" type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
             </div>
