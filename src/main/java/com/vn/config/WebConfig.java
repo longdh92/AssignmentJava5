@@ -86,10 +86,14 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CartDetailRepository cartDetailRepository() { return new CartDetailRepositoryImpl(); }
+    public CartDetailRepository cartDetailRepository() {
+        return new CartDetailRepositoryImpl();
+    }
 
     @Bean
-    public CartDetailService cartDetailService() { return new CartDetailServiceImpl(); }
+    public CartDetailService cartDetailService() {
+        return new CartDetailServiceImpl();
+    }
 
     @Bean
     public CartRepository cartRepository() {
@@ -102,16 +106,34 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public InvoiceRepository invoiceRepository() { return new InvoiceRepositoryImpl(); }
+    public InvoiceRepository invoiceRepository() {
+        return new InvoiceRepositoryImpl();
+    }
 
     @Bean
-    public InvoiceService invoiceService() { return new InvoiceServiceImpl(); }
+    public InvoiceService invoiceService() {
+        return new InvoiceServiceImpl();
+    }
 
     @Bean
-    public InvoiceDetailRepository invoiceDetailRepository() { return new InvoiceDetailRepositoryImpl(); }
+    public InvoiceDetailRepository invoiceDetailRepository() {
+        return new InvoiceDetailRepositoryImpl();
+    }
 
     @Bean
-    public InvoiceDetailService invoiceDetailService() { return new InvoiceDetailServiceImpl(); }
+    public InvoiceDetailService invoiceDetailService() {
+        return new InvoiceDetailServiceImpl();
+    }
+
+    @Bean
+    public InvoiceStatusRepository invoiceStatusRepository() {
+        return new InvoiceStatusRepositoryImpl();
+    }
+
+    @Bean
+    public InvoiceStatusService invoiceStatusService() {
+        return new InvoiceStatusServiceImpl();
+    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {

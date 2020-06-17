@@ -61,10 +61,8 @@
                                     <td th:text="${product.getIdCategory().toString()}"></td>
                                     <td th:text="${product.getDescription()}"></td>
                                     <td th:text="${product.getStatus()}"></td>
-                                    <td>
-                                        <a th:href="@{'/admin/insertUpdateProductView/' + ${(product.getIdProduct()*4+74)/2}}">Edit</a>
-                                    </td>
-                                    <td><a th:href="@{'/admin/removeProduct/' + ${(product.getIdProduct()*4+74)/2}}">Remove</a></td>
+                                    <td><a class="btn btn-info" th:href="@{'/admin/insertUpdateProductView/' + ${(product.getIdProduct()*4+74)/2}}">Edit</a></td>
+                                    <td><a class="btn btn-danger" th:href="@{'/admin/removeProduct/' + ${(product.getIdProduct()*4+74)/2}}">Remove</a></td>
                                 </tr>
                                 </tbody>
                             </table>

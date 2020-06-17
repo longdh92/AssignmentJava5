@@ -17,6 +17,9 @@
                     <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
                     <li class="breadcrumb-item active">Customer List</li>
                 </ol>
+                <div th:class="${alert}">
+                    <strong th:text="${message}"></strong>
+                </div>
                 <div class="card mb-4">
                     <div class="card-header"><i class="fas fa-table mr-1"></i>Customers accounts</div>
                     <div class="card-body">
@@ -53,7 +56,9 @@
                                     <td th:text="${customer.isGender() ? 'Male' : 'Female'}"></td>
                                     <td th:text="${customer.getPhone()}"></td>
                                     <td>
-                                        <th:block th:if="${customer.getStatus().length() > 0}"><a href="#">Reset password</a></th:block>
+                                        <th:block th:if="${customer.getStatus().length() > 0}"><a class="btn btn-secondary"
+                                                th:href="@{'/admin/resetPasswordCustomer/' + ${(customer.getIdCustomer()*4+74)/2}}">Reset
+                                            password</a></th:block>
                                     </td>
                                 </tr>
                                 </tbody>

@@ -30,4 +30,9 @@ public class CustomerServiceImpl implements CustomerService {
     public void remove(Long id) {
         customerRepository.remove(id);
     }
+
+    @Override
+    public Customer findByEmail(String emailCustomer) {
+        return customerRepository.findByEmail(emailCustomer);
+    }
 }

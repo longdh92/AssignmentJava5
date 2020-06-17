@@ -50,4 +50,15 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     public Customer findByName(String name) {
         return null;
     }
+
+    @Override
+    public Customer findByEmail(String emailCustomer) {
+        String query = "select c from Customer c where c.emailCustomer = :emailCustomer";
+        TypedQuery<Customer> customerTypedQuery = entityManager.createQuery(query, Customer.class);
+        customerTypedQuery.setParameter("emailCustomer", emailCustomer);
+        if (customerTypedQuery.getResultList().size() == 0) {
+            return null;
+        }
+        return customerTypedQuery.getResultList().get(0);
+    }
 }

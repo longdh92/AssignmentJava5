@@ -56,12 +56,12 @@
                                     <td th:text="${admin.getStatus()}"></td>
                                     <td>
                                         <th:block th:if="${!admin.isRole() && !admin.getStatus().equalsIgnoreCase('REMOVED')}">
-                                            <a class="btn btn-primary" th:href="@{'/admin/setAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Set as Admin</a>
+                                            <a class="btn btn-success" th:href="@{'/admin/setAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Set as Admin</a>
                                         </th:block>
                                     </td>
                                     <td>
                                         <th:block th:if="${!admin.getStatus().equalsIgnoreCase('REMOVED')}">
-                                            <a class="btn btn-primary" th:href="@{'/admin/removeAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Remove</a>
+                                            <a class="btn btn-danger" th:href="@{'/admin/removeAdmin/' + ${(admin.getIdAdmin()*4+74)/2}}">Remove</a>
                                         </th:block>
                                     </td>
                                 </tr>

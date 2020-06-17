@@ -1,6 +1,7 @@
 package com.vn.controller;
 
 import com.vn.model.*;
+import com.vn.repository.InvoiceStatusRepository;
 import com.vn.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class CartController {
 
     @Autowired
     private InvoiceDetailService invoiceDetailService;
+
+    @Autowired
+    private InvoiceStatusRepository invoiceStatusRepository;
 
     @RequestMapping("/cart")
     public String cartView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
@@ -153,6 +157,7 @@ public class CartController {
         invoice.setPhone(customer1.getPhone());
         invoice.setTotal(total);
         invoice.setIdCustomer(customer);
+        invoice.setInvoiceStatus(invoiceStatusRepository.findByName("Wait for Confirmation"));
         invoiceService.save(invoice);
 
         for (Cart_detail cart_detail : cart_details) {

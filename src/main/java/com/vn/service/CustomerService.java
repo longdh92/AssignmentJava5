@@ -12,4 +12,6 @@ public interface CustomerService {
     void save(Customer customer);
 
     void remove(Long id);
+
+    Customer findByEmail(String emailCustomer);
 }

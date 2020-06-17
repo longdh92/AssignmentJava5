@@ -17,8 +17,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        String query = "select p from Product p";
+        String query = "select p from Product p where p.status <> :status";
         TypedQuery<Product> productTypedQuery = entityManager.createQuery(query, Product.class);
+        productTypedQuery.setParameter("status", "Removed");
         return productTypedQuery.getResultList();
     }
 

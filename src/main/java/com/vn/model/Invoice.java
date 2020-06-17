@@ -25,8 +25,9 @@ public class Invoice implements Serializable {
     @Column(name = "emailCustomer")
     private String emailCustomer;
 
-    @Column(name = "status")
-    private String status;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "invoiceStatus")
+    private InvoiceStatus invoiceStatus;
 
     @Column(name = "date")
     private Date date;
@@ -77,12 +78,12 @@ public class Invoice implements Serializable {
         this.emailCustomer = emailCustomer;
     }
 
-    public String getStatus() {
-        return status;
+    public InvoiceStatus getInvoiceStatus() {
+        return invoiceStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
 
     public Date getDate() {
