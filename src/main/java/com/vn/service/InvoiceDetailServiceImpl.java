@@ -30,4 +30,9 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     public void remove(Long id) {
         invoiceDetailRepository.remove(id);
     }
+
+    @Override
+    public List<Invoice_detail> findByIdInvoice(Long id) {
+        return invoiceDetailRepository.findByIdInvoice(id);
+    }
 }

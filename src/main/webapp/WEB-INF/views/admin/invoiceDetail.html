@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/header :: head">
+    <title id="title">Product List</title>
+</head>
+<body class="sb-nav-fixed">
+<nav th:replace="admin/fragments/header :: header(id=${admin.getIdAdmin()})">
+    <div id="username" th:text="${'Hello ' + admin.getUsernameAdmin()}"></div>
+</nav>
+<div id="layoutSidenav">
+    <div th:replace="admin/fragments/menu :: menu"></div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Invoice Detail</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/invoiceListView">Invoice List</a></li>
+                    <li class="breadcrumb-item">Invoice Detail</li>
+                </ol>
+                <div th:class="${alert}">
+                    <strong th:text="${message}"></strong>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Update Status
+                    </button>
+                    <div class="dropdown-menu">
+                        <div th:each="status : ${allStatus}">
+                            <a class="dropdown-item"
+                               th:href="@{'/admin/updateInvoice/' + ${(invoice.getIdInvoice()*4+74)/2} + '/' + ${status.getIdStatus()}}"
+                               th:text="${status.getStatusName()}"></a>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <div class="card mb-4">
+                    <div class="card-header"
+                         th:text="${'Invoice ID: ' + invoice.getIdInvoice() + ' - Status: ' + invoice.getInvoiceStatus()}">
+                        <i class="fas fa-table mr-1"></i></div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID Product</th>
+                                    <th>Product Name</th>
+                                    <th>Image</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>ID Product</th>
+                                    <th>Product Name</th>
+                                    <th>Image</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="invoiceDetail : ${detailList}">
+                                    <td th:text="${invoiceDetail.getIdProduct().getIdProduct()}"></td>
+                                    <td th:text="${invoiceDetail.getIdProduct().getProductName()}"></td>
+                                    <td><img
+                                            th:src="@{'/resourcesAdmin/images/home/' + ${invoiceDetail.getIdProduct().getImage()}}"
+                                            width="180" height="180"/></td>
+                                    <td th:text="${invoiceDetail.getQuantity()}"></td>
+                                    <td th:text="${'$' + invoiceDetail.getQuantity() * invoiceDetail.getIdProduct().getPrice()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="admin/fragments/footer :: footer"></footer>
+    </div>
+</div>
+<div th:replace="admin/fragments/header :: script"></div>
+</body>
+</html>

@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/header :: head">
+    <title id="title">Product List</title>
 </head>
-<body>
-
+<body class="sb-nav-fixed">
+<nav th:replace="admin/fragments/header :: header(id=${admin.getIdAdmin()})">
+    <div id="username" th:text="${'Hello ' + admin.getUsernameAdmin()}"></div>
+</nav>
+<div id="layoutSidenav">
+    <div th:replace="admin/fragments/menu :: menu"></div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Invoices</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Invoice List</li>
+                </ol>
+                <div class="card mb-4">
+                    <div class="card-header"><i class="fas fa-table mr-1"></i>Invoices</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Detail</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Detail</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="invoice : ${invoices}">
+                                    <td th:text="${invoice.getIdInvoice()}"></td>
+                                    <td th:text="${invoice.getCustomerName()}"></td>
+                                    <td th:text="${invoice.getDate()}"></td>
+                                    <td th:text="${'$' + invoice.getTotal()}"></td>
+                                    <td th:text="${invoice.getInvoiceStatus()}"></td>
+                                    <td><a class="btn btn-info" th:href="@{'/admin/invoiceDetail/' + ${(invoice.getIdInvoice()*4+74)/2}}">Detail</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="admin/fragments/footer :: footer"></footer>
+    </div>
+</div>
+<div th:replace="admin/fragments/header :: script"></div>
 </body>
 </html>

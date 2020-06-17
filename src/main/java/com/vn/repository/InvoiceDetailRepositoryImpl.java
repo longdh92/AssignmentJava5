@@ -45,4 +45,12 @@ public class InvoiceDetailRepositoryImpl implements InvoiceDetailRepository {
     public Invoice_detail findByName(String name) {
         return null;
     }
+
+    @Override
+    public List<Invoice_detail> findByIdInvoice(Long id) {
+        String query = "select i from Invoice_detail i where i.idInvoice.idInvoice = :id";
+        TypedQuery<Invoice_detail> invoice_detailTypedQuery = entityManager.createQuery(query, Invoice_detail.class);
+        invoice_detailTypedQuery.setParameter("id", id);
+        return invoice_detailTypedQuery.getResultList();
+    }
 }
