@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.tree.Tree;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -208,17 +209,46 @@ public class CartController {
         return cartView(emailCustomer, passwordCustomer, session, model);
     }
 
+    @RequestMapping("/historyView")
+    public String historyView(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                              @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                              HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        String checkLogin = checkLogin(emailCustomer, passwordCustomer, session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
+        }
+
+        TreeMap<List<Invoice_detail>, Integer> invoiceTreeMap = new TreeMap<>(new Comparator<List<Invoice_detail>>() {
+            @Override
+            public int compare(List<Invoice_detail> o1, List<Invoice_detail> o2) {
+                return o2.get(0).getIdInvoice().getDate().compareTo(o1.get(0).getIdInvoice().getDate());
+            }
+        });
+
+        List<Invoice> invoices = invoiceService.findByCustomer(customer);
+        List<List<Invoice_detail>> invoiceList = new ArrayList<>();
+        for (Invoice invoice : invoices) {
+            invoiceList.add(invoiceDetailService.findByIdInvoice(invoice.getIdInvoice()));
+        }
+        for (List<Invoice_detail> invoice_details : invoiceList) {
+            int total = 0;
+            for (Invoice_detail invoice_detail : invoice_details) {
+                total += invoice_detail.getQuantity() * invoice_detail.getIdProduct().getPrice();
+            }
+            invoiceTreeMap.put(invoice_details, total);
+        }
+        model.addAttribute("invoiceTreeMap", invoiceTreeMap);
+        return "historyOrder";
+    }
+
     public String cartAndCheckout(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
                                   @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
                                   HttpSession session, Model model, String view) {
         Customer customer = (Customer) session.getAttribute("customer");
-        if (customer == null) {
-            model.addAttribute("customer", new Customer());
-            model.addAttribute("emailCustomer", emailCustomer);
-            model.addAttribute("passwordCustomer", passwordCustomer);
-            return "loginUser";
-        } else {
-            model.addAttribute("customer", customer);
+        String checkLogin = checkLogin(emailCustomer, passwordCustomer, session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
 
         TreeMap<Product, Integer> productTreeMap = new TreeMap<Product, Integer>(
@@ -240,5 +270,20 @@ public class CartController {
         model.addAttribute("total", total);
 
         return view;
+    }
+
+    public String checkLogin(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                             @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                             HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            model.addAttribute("customer", new Customer());
+            model.addAttribute("emailCustomer", emailCustomer);
+            model.addAttribute("passwordCustomer", passwordCustomer);
+            return "loginUser";
+        } else {
+            model.addAttribute("customer", customer);
+        }
+        return "";
     }
 }

@@ -1,5 +1,6 @@
 package com.vn.repository;
 
+import com.vn.model.Customer;
 import com.vn.model.Invoice;
 
 import javax.persistence.EntityManager;
@@ -49,5 +50,13 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     @Override
     public Invoice findByName(String name) {
         return null;
+    }
+
+    @Override
+    public List<Invoice> findByCustomer(Customer customer) {
+        String query = "select i from Invoice i where i.idCustomer = :customer";
+        TypedQuery<Invoice> invoiceTypedQuery = entityManager.createQuery(query, Invoice.class);
+        invoiceTypedQuery.setParameter("customer", customer);
+        return invoiceTypedQuery.getResultList();
     }
 }

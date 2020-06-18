@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <title id="title">Your Cart</title>
+</head>
+
+<body>
+<header th:replace="fragments/header :: header(${customer})"></header>
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="/home">Home</a></li>
+                <li class="active">History Orders</li>
+            </ol>
+        </div>
+        <div th:each="invoiceDetails : ${invoiceTreeMap.entrySet()}">
+            <div class="review-payment">
+                <h2 th:text="${'Invoice ID: ' + invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice() + ' - Status: ' + invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus()}"></h2>
+            </div>
+            <div class="table-responsive cart_info">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Item</td>
+                        <td class="description"></td>
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">Total</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="invoiceDetail : ${invoiceDetails.getKey()}">
+                        <td class="cart_product">
+                            <a href=""><img
+                                    th:src="@{'/resourcesAdmin/images/home/' + ${invoiceDetail.getIdProduct().getImage()}}"
+                                    alt="" width="180" height="180"></a>
+                        </td>
+                        <td class="cart_description">
+                            <h4><a href="#" th:text="${invoiceDetail.getIdProduct().getProductName()}"></a></h4>
+                            <p th:text="${'Web ID:' + invoiceDetail.getIdProduct().getIdProduct()}"></p>
+                        </td>
+                        <td class="cart_price">
+                            <p th:text="${'$' + invoiceDetail.getIdProduct().getPrice()}"></p>
+                        </td>
+                        <td class="cart_quantity">
+                            <div class="cart_quantity_button">
+                                <input class="cart_quantity_input" type="text" name="quantity"
+                                       th:value="${invoiceDetail.getQuantity()}" autocomplete="off" size="2" readonly>
+                            </div>
+                        </td>
+                        <td class="cart_total">
+                            <p class="cart_total_price"
+                               th:text="${invoiceDetail.getQuantity() * invoiceDetail.getIdProduct().getPrice()}"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                        <td colspan="2">
+                            <table class="table table-condensed total-result">
+                                <tr>
+                                    <td>Cart Sub Total</td>
+                                    <td th:text="${invoiceDetails.getValue()}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tax</td>
+                                    <td th:text="${invoiceDetails.getValue()/10}"></td>
+                                </tr>
+                                <tr class="shipping-cost">
+                                    <td>Shipping Cost</td>
+                                    <td>Free</td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td><span th:text="${invoiceDetails.getValue() + invoiceDetails.getValue()/10}"></span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <th:block th:if="${invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Delivered' &&
+                    invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Canceled'}">
+                        <tr>
+                            <td><a class="btn btn-default update" href="#">Cancel Order</a></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section> <!--/#cart_items-->
+<footer th:replace="fragments/footer :: footer"></footer>
+<div th:replace="fragments/header :: script"></div>
+</body>
+</html>
