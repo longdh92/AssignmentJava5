@@ -103,9 +103,13 @@ public class AdminController {
 
     @PostMapping("/registerAdmin")
     public String registerAdmin(Model model, HttpServletRequest request, Admin admin) {
-        String message = validateRegisterAdmin(admin, model, request.getParameter("confirmPassword"), "admin/register");
-        if (message.length() > 0) {
-            return message;
+        String validateRegisterAdmin = validateRegisterAdmin(admin, model, "admin/register");
+        if (validateRegisterAdmin.length() > 0) {
+            return validateRegisterAdmin;
+        }
+        String validateUpdateAdmin = validateUpdateAdmin(admin, model, request.getParameter("confirmPassword"), "admin/register");
+        if (validateUpdateAdmin.length() > 0) {
+            return validateUpdateAdmin;
         }
         admin.setRole(false);
         admin.setStatus("INACTIVE");
@@ -116,7 +120,7 @@ public class AdminController {
         return "admin/register";
     }
 
-    public String validateRegisterAdmin(Admin admin, Model model, String confirm, String view) {
+    public String validateRegisterAdmin(Admin admin, Model model, String view) {
         // Username
         if (!admin.getUsernameAdmin().matches("[a-zA-Z0-9]+")) {
             model.addAttribute("message", "Only alphabet characters and numbers !");
@@ -135,17 +139,17 @@ public class AdminController {
                 return view;
             }
         }
-
-        return validateUpdateAdmin(admin, model, confirm, view);
-    }
-
-    public String validateUpdateAdmin(Admin admin, Model model, String confirm, String view) {
         // Email
         if (!admin.getEmailAdmin().matches("\\w+@\\w+(\\.\\w+){1,2}")) {
             model.addAttribute("message", "Invalid email address !");
             model.addAttribute("alert", "alert alert-danger");
             return view;
         }
+
+        return "";
+    }
+
+    public String validateUpdateAdmin(Admin admin, Model model, String confirm, String view) {
         // Password
         if (admin.getPasswordAdmin().trim().length() < 3) {
             model.addAttribute("message", "Password at least 3 letters !");

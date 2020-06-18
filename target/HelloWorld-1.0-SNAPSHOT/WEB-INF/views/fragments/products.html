@@ -10,22 +10,22 @@
             <div class="product-image-wrapper">
                 <div class="single-products">
                     <div class="productinfo text-center">
-                        <img th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}" alt=""/>
+                        <a href="#"><img th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}" alt=""/></a>
                         <h2 th:text="${'$' + product.getPrice()}"></h2>
                         <p th:text="${product.getProductName()}"></p>
                         <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}"
                            class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
                             cart</a>
                     </div>
-                    <div class="product-overlay">
-                        <div class="overlay-content">
-                            <h2 th:text="${'$' + product.getPrice()}"></h2>
-                            <p th:text="${product.getProductName()}"></p>
-                            <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}"
-                               class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
-                                cart</a>
-                        </div>
-                    </div>
+<!--                    <div class="product-overlay">-->
+<!--                        <div class="overlay-content">-->
+<!--                            <h2 th:text="${'$' + product.getPrice()}"></h2>-->
+<!--                            <p th:text="${product.getProductName()}"></p>-->
+<!--                            <a th:href="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}"-->
+<!--                               class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to-->
+<!--                                cart</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
