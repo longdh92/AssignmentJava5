@@ -17,6 +17,9 @@
                     <li class="breadcrumb-item"><a href="/admin/admin">Dashboard</a></li>
                     <li class="breadcrumb-item active">Product List</li>
                 </ol>
+                <div th:class="${alert}">
+                    <strong th:text="${message}"></strong>
+                </div>
                 <div class="card mb-4">
                     <div class="card-header"><i class="fas fa-table mr-1"></i>Products</div>
                     <div class="card-body">

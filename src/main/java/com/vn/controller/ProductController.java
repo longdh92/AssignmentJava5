@@ -69,7 +69,7 @@ public class ProductController {
         Product product = productService.findById(id);
         product.setStatus("Removed");
         productService.save(product);
-        model.addAttribute("message", "Save Successful !");
+        model.addAttribute("message", "Remove Successful !");
         model.addAttribute("alert", "alert alert-success");
         return productList(session, model);
     }

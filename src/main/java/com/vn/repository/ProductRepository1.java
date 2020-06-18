@@ -12,4 +12,7 @@ public interface ProductRepository1 extends JpaRepository<Product, Integer> {
 
     @Query("select p from Product p where p.status <> 'Removed' and p.productName like %?1%")
     Page<Product> findByProductName(String productName, Pageable pageable);
+
+    @Query("select p from Product p where p.status <> 'Removed'")
+    Page<Product> findAll(Pageable pageable);
 }

@@ -1,17 +1,16 @@
 package com.vn.controller;
 
+import com.vn.model.Cart;
 import com.vn.model.Customer;;
 import com.vn.repository.ProductRepository1;
+import com.vn.service.CartService;
 import com.vn.service.CategoryService;
 import com.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +29,9 @@ public class HomeController {
 
     @Autowired
     private ProductRepository1 productRepository1;
+
+    @Autowired
+    private CartService cartService;
 
     @RequestMapping("/home")
     public String home(Model model, HttpSession session,
@@ -148,23 +150,34 @@ public class HomeController {
         model.addAttribute("emailCustomer", emailCustomer);
         model.addAttribute("passwordCustomer", passwordCustomer);
 
-        String validate = validateSignup(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
-                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"), "loginUser");
-        if (validate.length() > 0) {
-            return validate;
+        String validateSignup = validateSignup(model, customer.getEmailCustomer(), "loginUser");
+        if (validateSignup.length() > 0) {
+            return validateSignup;
+        }
+        String validateUpdate = validateUpdate(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
+                customer.getPhone(), gender, "loginUser");
+        if (validateUpdate.length() > 0) {
+            return validateUpdate;
+        }
+        String validatePassword = validatePassword(customer.getPasswordCustomer(), request.getParameter("confirm"), model, "loginUser");
+        if (validatePassword.length() > 0) {
+            return validatePassword;
         }
 
         customer.setStatus("");
 
         customerService.save(customer);
 
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartService.save(cart);
+
         model.addAttribute("message1", "Register Successfully !");
         model.addAttribute("alert1", "alert alert-success");
         return "loginUser";
     }
 
-    public String validateSignup(Model model, Customer customer, String emailCustomer, String customerName,
-                                 String phone, String gender, String passwordCustomer, String confirmPassword, String view) {
+    public String validateSignup(Model model, String emailCustomer, String view) {
         List<Customer> customerList = customerService.findAll();
         for (Customer customer1 : customerList) {
             if (emailCustomer.equalsIgnoreCase(customer1.getEmailCustomer())) {
@@ -173,11 +186,11 @@ public class HomeController {
                 return view;
             }
         }
-        return validateUpdate(model, customer, emailCustomer, customerName, phone, gender, passwordCustomer, confirmPassword, view);
+        return "";
     }
 
     public String validateUpdate(Model model, Customer customer, String emailCustomer, String customerName,
-                                 String phone, String gender, String passwordCustomer, String confirmPassword, String view) {
+                                 String phone, String gender, String view) {
         if (!emailCustomer.matches("\\w+@\\w+(\\.\\w+){1,2}")) {
             model.addAttribute("message1", "Invalid Email Address !");
             model.addAttribute("alert1", "alert alert-danger");
@@ -202,6 +215,11 @@ public class HomeController {
         } else {
             customer.setGender(false);
         }
+
+        return "";
+    }
+
+    public String validatePassword(String passwordCustomer, String confirmPassword, Model model, String view) {
         if (passwordCustomer.trim().length() < 3) {
             model.addAttribute("message1", "Password at least 3 letters !");
             model.addAttribute("alert1", "alert alert-danger");
@@ -229,12 +247,14 @@ public class HomeController {
         model.addAttribute("customer", customer1);
 
         String validate = validateUpdate(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
-                customer.getPhone(), gender, customer.getPasswordCustomer(), request.getParameter("confirm"), "updateUser");
+                customer.getPhone(), gender, "updateUser");
         if (validate.length() > 0) {
             return validate;
         }
 
         customer.setIdCustomer(customer1.getIdCustomer());
+        customer.setPasswordCustomer(customer1.getPasswordCustomer());
+        customer.setStatus("");
         session.setAttribute("customer", customer);
         model.addAttribute("customer", customer);
         customerService.save(customer);
@@ -242,5 +262,36 @@ public class HomeController {
         model.addAttribute("message1", "Update Successfully !");
         model.addAttribute("alert1", "alert alert-success");
         return "updateUser";
+    }
+
+    @GetMapping("/changePasswordView")
+    public String changePasswordView(HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        model.addAttribute("customer", customer);
+        return "changePasswordUser";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(HttpSession session, Model model, HttpServletRequest request) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        model.addAttribute("customer", customer);
+
+        String passwordCustomer = request.getParameter("passwordCustomer");
+        if (!passwordCustomer.equals(customer.getPasswordCustomer())) {
+            model.addAttribute("message1", "Wrong password !");
+            model.addAttribute("alert1", "alert alert-danger");
+            return "changePasswordUser";
+        }
+        String validatePassword = validatePassword(request.getParameter("newPassword"),
+                request.getParameter("confirmPassword"), model, "changePasswordUser");
+        if (validatePassword.length() > 0) {
+            return validatePassword;
+        }
+
+        customer.setPasswordCustomer(request.getParameter("newPassword"));
+        customerService.save(customer);
+        model.addAttribute("message1", "Change password successful !");
+        model.addAttribute("alert1", "alert alert-success");
+        return "changePasswordUser";
     }
 }
