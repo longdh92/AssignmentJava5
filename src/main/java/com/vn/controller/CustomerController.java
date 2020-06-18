@@ -26,22 +26,20 @@ public class CustomerController {
 
     @GetMapping("/customerList")
     public String customerList(HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         model.addAttribute("customerList", customerService.findAll());
         return "admin/customerList";
     }
 
     @RequestMapping("/resetPasswordCustomer/{idCustomer}")
     public String resetPasswordCustomer(@PathVariable(name = "idCustomer") Long idCustomer, HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         Long id = (idCustomer * 2 - 74) / 4;
         Customer customer = customerService.findById(id);
         customer.setPasswordCustomer("123456");
@@ -61,5 +59,17 @@ public class CustomerController {
         model.addAttribute("message", "Reset password successfully !");
         model.addAttribute("alert", "alert alert-success");
         return customerList(session, model);
+    }
+
+    private String checkLogin(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        } else if (!admin.isRole() || !admin.getStatus().equalsIgnoreCase("ACTIVED")) {
+            model.addAttribute("admin", admin);
+            return "admin/admin";
+        }
+        model.addAttribute("admin", admin);
+        return "";
     }
 }

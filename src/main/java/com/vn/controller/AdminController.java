@@ -58,7 +58,7 @@ public class AdminController {
         List<Admin> list = adminService.findAll();
         for (Admin admin1 : list) {
             if (admin.getUsernameAdmin().equals(admin1.getUsernameAdmin())) {
-                if (admin.getPasswordAdmin().equals(admin1.getPasswordAdmin())) {
+                if (bCryptPasswordEncoder.matches(admin.getPasswordAdmin(), admin1.getPasswordAdmin())) {
                     Cookie usernameAdmin = new Cookie("usernameAdmin", admin.getUsernameAdmin());
                     Cookie passwordAdmin = new Cookie("passwordAdmin", admin.getPasswordAdmin());
                     if (request.getParameter("rememberAdmin") != null) {
@@ -109,6 +109,7 @@ public class AdminController {
         }
         admin.setRole(false);
         admin.setStatus("INACTIVE");
+        admin.setPasswordAdmin(bCryptPasswordEncoder.encode(admin.getPasswordAdmin()));
         adminService.save(admin);
         model.addAttribute("message", "Register Successful !");
         model.addAttribute("alert", "alert alert-success");
@@ -176,7 +177,7 @@ public class AdminController {
         }
         String currentPassword = request.getParameter("currentPassword");
         Admin admin = (Admin) session.getAttribute("admin");
-        if (!currentPassword.equals(admin.getPasswordAdmin())) {
+        if (!bCryptPasswordEncoder.matches(currentPassword, admin.getPasswordAdmin())) {
             model.addAttribute("message", "Wrong password !");
             model.addAttribute("alert", "alert alert-danger");
             return "admin/changePassword";
@@ -193,6 +194,9 @@ public class AdminController {
             model.addAttribute("alert", "alert alert-danger");
             return "admin/changePassword";
         }
+        admin.setPasswordAdmin(bCryptPasswordEncoder.encode(newPassword));
+        adminService.save(admin);
+        session.setAttribute("admin", admin);
         model.addAttribute("message", "Change password successfully !");
         model.addAttribute("alert", "alert alert-success");
         return "admin/changePassword";

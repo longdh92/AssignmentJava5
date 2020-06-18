@@ -34,22 +34,20 @@ public class ProductController {
 
     @GetMapping("/productList")
     public String productList(HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         model.addAttribute("productList", productService.findAll());
         return "admin/productList";
     }
 
     @GetMapping("/insertUpdateProductView/{idProduct}")
     public String editProduct(@PathVariable(value = "idProduct") Long idProduct, HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         Long id = (idProduct * 2 - 74) / 4;
         Product product = productService.findById(id);
         model.addAttribute("product", product);
@@ -59,11 +57,10 @@ public class ProductController {
 
     @GetMapping("/removeProduct/{idProduct}")
     public String removeProduct(@PathVariable(value = "idProduct") Long idProduct, HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
 
         Long id = (idProduct * 2 - 74) / 4;
         Product product = productService.findById(id);
@@ -77,11 +74,10 @@ public class ProductController {
     @PostMapping("/insertUpdateProduct")
     public String saveProduct(Product product, Model model, HttpSession session, @RequestParam("categoryName") String categoryName,
                               @RequestParam("imageProduct") MultipartFile photo) throws IOException {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
 
         String check = validateProduct(model, product, photo);
         if (check.length() > 0) {
@@ -122,11 +118,10 @@ public class ProductController {
 
     @GetMapping("/insertNewProduct")
     public String addProduct(Model model, HttpSession session) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         Product product1 = new Product();
         product1.setIdCategory(categoryService.findById((long) 1));
         model.addAttribute("product", product1);
@@ -145,6 +140,18 @@ public class ProductController {
             model.addAttribute("alert", "alert alert-danger");
             return "admin/insertUpdateProduct";
         }
+        return "";
+    }
+
+    private String checkLogin(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        } else if (!admin.isRole() || !admin.getStatus().equalsIgnoreCase("ACTIVED")) {
+            model.addAttribute("admin", admin);
+            return "admin/admin";
+        }
+        model.addAttribute("admin", admin);
         return "";
     }
 }

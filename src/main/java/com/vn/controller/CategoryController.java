@@ -22,17 +22,20 @@ public class CategoryController {
 
     @GetMapping("/categoryList")
     public String categoryList(HttpSession session, Model model) {
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            return "admin/login";
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
-        model.addAttribute("admin", admin);
         model.addAttribute("categoryList", categoryService.findAll());
         return "admin/categoryList";
     }
 
     @PostMapping("/addNewCategory")
     public String addCategory(Model model, Category category, HttpSession session) {
+        String checkLogin = checkLogin(session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
+        }
         if (category.getCategoryName().trim().length() == 0) {
             model.addAttribute("message", "Empty Category Name !");
             model.addAttribute("alert", "alert alert-danger");
@@ -50,5 +53,17 @@ public class CategoryController {
         model.addAttribute("message", "Add new category successful !");
         model.addAttribute("alert", "alert alert-success");
         return categoryList(session, model);
+    }
+
+    private String checkLogin(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "admin/login";
+        } else if (!admin.isRole() || !admin.getStatus().equalsIgnoreCase("ACTIVED")) {
+            model.addAttribute("admin", admin);
+            return "admin/admin";
+        }
+        model.addAttribute("admin", admin);
+        return "";
     }
 }

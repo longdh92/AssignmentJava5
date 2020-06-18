@@ -8,6 +8,7 @@ import com.vn.service.CategoryService;
 import com.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,9 @@ public class HomeController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping("/home")
     public String home(Model model, HttpSession session,
@@ -81,9 +85,9 @@ public class HomeController {
         List<Customer> customerList = customerService.findAll();
         for (Customer customer1 : customerList) {
             if (customer1.getEmailCustomer().equalsIgnoreCase(customer.getEmailCustomer().trim())) {
-                if (customer1.getPasswordCustomer().equals(customer.getPasswordCustomer())) {
+                if (bCryptPasswordEncoder.matches(customer.getPasswordCustomer(), customer1.getPasswordCustomer())) {
                     Cookie emailCustomer = new Cookie("emailCustomer", customer1.getEmailCustomer());
-                    Cookie passwordCustomer = new Cookie("passwordCustomer", customer1.getPasswordCustomer());
+                    Cookie passwordCustomer = new Cookie("passwordCustomer", customer.getPasswordCustomer());
                     if (request.getParameter("rememberCustomer") != null) {
                         emailCustomer.setMaxAge(3600);
                         passwordCustomer.setMaxAge(3600);
@@ -165,6 +169,7 @@ public class HomeController {
         }
 
         customer.setStatus("");
+        customer.setPasswordCustomer(bCryptPasswordEncoder.encode(customer.getPasswordCustomer()));
 
         customerService.save(customer);
 
@@ -241,7 +246,7 @@ public class HomeController {
     }
 
     @PostMapping("/updateCustomer")
-    public String updateCustomer(HttpSession session, Model model, Customer customer, HttpServletRequest request,
+    public String updateCustomer(HttpSession session, Model model, Customer customer,
                                  @RequestParam(name = "genderCustomer", required = false) String gender) {
         Customer customer1 = (Customer) session.getAttribute("customer");
         model.addAttribute("customer", customer1);
@@ -277,7 +282,7 @@ public class HomeController {
         model.addAttribute("customer", customer);
 
         String passwordCustomer = request.getParameter("passwordCustomer");
-        if (!passwordCustomer.equals(customer.getPasswordCustomer())) {
+        if (!bCryptPasswordEncoder.matches(passwordCustomer, customer.getPasswordCustomer())) {
             model.addAttribute("message1", "Wrong password !");
             model.addAttribute("alert1", "alert alert-danger");
             return "changePasswordUser";
@@ -288,8 +293,9 @@ public class HomeController {
             return validatePassword;
         }
 
-        customer.setPasswordCustomer(request.getParameter("newPassword"));
+        customer.setPasswordCustomer(bCryptPasswordEncoder.encode(request.getParameter("newPassword")));
         customerService.save(customer);
+        session.setAttribute("customer", customer);
         model.addAttribute("message1", "Change password successful !");
         model.addAttribute("alert1", "alert alert-success");
         return "changePasswordUser";
