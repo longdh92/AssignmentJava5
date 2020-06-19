@@ -26,7 +26,7 @@
                             <img th:src="@{/resources/images/product-details/rating.png}" alt=""/>
                             <form th:action="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}">
                             <span>
-									<span th:text="${'UD $' + product.getPrice()}"></span>
+									<span th:text="${'USD $' + product.getPrice()}"></span>
 									<label>Quantity:</label>
 									<input type="number" min="1" name="quantity" required/>
 									<button type="submit" class="btn btn-fefault cart">

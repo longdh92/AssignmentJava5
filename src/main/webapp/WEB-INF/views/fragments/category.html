@@ -9,11 +9,11 @@
         <div class="panel-group category-products" id="accordian"><!--category-productsr-->
             <div class="panel panel-default" th:each="category : ${list}">
                 <div class="panel-heading">
-                    <h4 class="panel-title"><a th:href="@{/home(categoryName=${category.getCategoryName()})}" th:text="${category.getCategoryName()}"></a></h4>
+                    <h4 class="panel-title"><a th:href="@{/home(categoryName=${category.getCategoryName()})}"
+                                               th:text="${category.getCategoryName()}"></a></h4>
                 </div>
             </div>
         </div><!--/category-products-->
-
     </div>
 </div>
 </body>

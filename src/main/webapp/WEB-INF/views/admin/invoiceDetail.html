@@ -21,7 +21,7 @@
                 <div th:class="${alert}">
                     <strong th:text="${message}"></strong>
                 </div>
-                <th:block th:if="${invoice.getInvoiceStatus().getStatusName() != 'Delivered' && invoice.getInvoiceStatus().getStatusName() != 'Canceled'}">
+                <th:block th:if="${invoice.getInvoiceStatus().getStatusName() != 'Canceled'}">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
