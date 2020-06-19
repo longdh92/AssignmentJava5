@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <title id="title">Product Detail</title>
+</head>
+
+<body>
+<header th:replace="fragments/header :: header(${customer})"></header>
+<section th:replace="fragments/slider :: slider"></section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div th:replace="fragments/category :: category(list=${categoryList})"></div>
+            <div class="col-sm-9 padding-right">
+                <div class="product-details"><!--product-details-->
+                    <div class="col-sm-5">
+                        <div class="view-product">
+                            <img th:src="@{'/resourcesAdmin/images/home/' + ${product.getImage()}}" alt=""/>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="product-information"><!--/product-information-->
+                            <img th:src="@{/resources/images/product-details/new.jpg}" class="newarrival" alt=""/>
+                            <h2 th:text="${product.getProductName()}"></h2>
+                            <p th:text="${'Web ID: ' + product.getIdProduct()}"></p>
+                            <img th:src="@{/resources/images/product-details/rating.png}" alt=""/>
+                            <form th:action="@{'/addToCart/' + ${(product.getIdProduct()*4+74)/2}}">
+                            <span>
+									<span th:text="${'UD $' + product.getPrice()}"></span>
+									<label>Quantity:</label>
+									<input type="number" min="1" th:max="${product.getAmount()}" name="quantity" required/>
+									<button type="submit" class="btn btn-fefault cart">
+										<i class="fa fa-shopping-cart"></i>
+										Add to cart
+									</button>
+								</span>
+                            </form>
+                            <p><b>Available:</b> <span th:text="${product.getAmount()}"></span></p>
+                            <p><b>Availability:</b> In Stock</p>
+                            <p><b>Condition:</b> New</p>
+                            <!--                            <p><b>Description:</b>-->
+                            <!--                            <p th:text="${product.getDescription()}"></p></p>-->
+                            <a href=""><img th:src="@{/resources/images/product-details/share.png}"
+                                            class="share img-responsive" alt=""/></a>
+                        </div><!--/product-information-->
+                    </div>
+                </div><!--/product-details-->
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:replace="fragments/footer :: footer"></footer>
+<div th:replace="fragments/header :: script"></div>
+</body>
+</html>

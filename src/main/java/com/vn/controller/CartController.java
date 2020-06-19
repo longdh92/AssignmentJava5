@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.tree.Tree;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class CartController {
     }
 
     @RequestMapping("/addToCart/{idProduct}")
-    public String addToCart(@PathVariable(name = "idProduct") Long idProduct, HttpSession session, Model model) {
+    public String addToCart(@PathVariable(name = "idProduct") Long idProduct, HttpSession session, Model model, HttpServletRequest request) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             model.addAttribute("customer", new Customer());
@@ -52,18 +53,27 @@ public class CartController {
         model.addAttribute("customer", customer);
 
         Long id = (idProduct * 2 - 74) / 4;
+        String quantity = request.getParameter("quantity");
 
         List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
 
         for (Cart_detail cart_detail : cart_details) {
             if (cart_detail.getIdProduct().getIdProduct() == id) {
-                cart_detail.setQuantity(cart_detail.getQuantity() + 1);
+                if (quantity != null) {
+                    cart_detail.setQuantity(cart_detail.getQuantity() + Integer.parseInt(quantity));
+                } else {
+                    cart_detail.setQuantity(cart_detail.getQuantity() + 1);
+                }
                 cartDetailService.update(cart_detail);
                 return cartView(customer.getEmailCustomer(), customer.getPasswordCustomer(), session, model);
             }
         }
         Cart_detail cart_detail = new Cart_detail();
-        cart_detail.setQuantity(1);
+        if (quantity != null) {
+            cart_detail.setQuantity(Integer.parseInt(quantity));
+        } else {
+            cart_detail.setQuantity(1);
+        }
         cart_detail.setIdProduct(productService.findById(id));
         cart_detail.setIdCart(cartService.findIdCart(customer.getIdCustomer()));
         cartDetailService.save(cart_detail);

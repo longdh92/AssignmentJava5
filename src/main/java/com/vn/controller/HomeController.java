@@ -2,10 +2,12 @@ package com.vn.controller;
 
 import com.vn.model.Cart;
 import com.vn.model.Customer;;
+import com.vn.model.Product;
 import com.vn.repository.ProductRepository1;
 import com.vn.service.CartService;
 import com.vn.service.CategoryService;
 import com.vn.service.CustomerService;
+import com.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +26,9 @@ public class HomeController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private CustomerService customerService;
@@ -299,5 +304,21 @@ public class HomeController {
         model.addAttribute("message1", "Change password successful !");
         model.addAttribute("alert1", "alert alert-success");
         return "changePasswordUser";
+    }
+
+    @RequestMapping("/productDetail/{idProduct}")
+    public String productDetail(HttpSession session, Model model,
+                                @PathVariable(name = "idProduct") Long idProduct) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            model.addAttribute("customer", new Customer());
+        } else {
+            model.addAttribute("customer", customer);
+        }
+        Long idP = (idProduct * 2 - 74) / 4;
+        Product product = productService.findById(idP);
+        model.addAttribute("product", product);
+        model.addAttribute("categoryList", categoryService.findAll());
+        return "productDetail";
     }
 }
