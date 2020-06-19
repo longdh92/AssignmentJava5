@@ -1,12 +1,10 @@
 package com.vn.controller;
 
-import com.vn.model.Admin;
-import com.vn.model.Invoice;
-import com.vn.model.InvoiceStatus;
-import com.vn.model.Invoice_detail;
+import com.vn.model.*;
 import com.vn.service.InvoiceDetailService;
 import com.vn.service.InvoiceService;
 import com.vn.service.InvoiceStatusService;
+import com.vn.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +26,9 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceStatusService invoiceStatusService;
+
+    @Autowired
+    private ProductService productService;
 
     @RequestMapping("/invoiceListView")
     public String invoiceList(HttpSession session, Model model) {
@@ -64,6 +65,16 @@ public class InvoiceController {
         Invoice invoice = invoiceService.findById(id);
         invoice.setInvoiceStatus(invoiceStatusService.findById(idStatus));
         invoiceService.save(invoice);
+
+        if (invoiceStatusService.findById(idStatus).getStatusName().equalsIgnoreCase("Canceled")) {
+            List<Invoice_detail> invoice_details = invoiceDetailService.findByIdInvoice(id);
+            for (Invoice_detail invoice_detail : invoice_details) {
+                Product product = invoice_detail.getIdProduct();
+                product.setAmount(product.getAmount() + invoice_detail.getQuantity());
+                productService.save(product);
+            }
+        }
+
         model.addAttribute("detailList", invoiceDetailService.findByIdInvoice(id));
         model.addAttribute("invoice", invoice);
         model.addAttribute("allStatus", invoiceStatusService.findAll());

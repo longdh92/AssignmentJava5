@@ -149,17 +149,30 @@ public class CartController {
                            HttpSession session, Model model, Customer customer1,
                            @PathVariable(name = "total", required = false) double total) {
         Customer customer = (Customer) session.getAttribute("customer");
+        // Kiểm tra giỏ hàng trống hay không
         List<Cart_detail> cart_details = cartDetailService.findByCustomer(customer.getIdCustomer());
         if (cart_details.size() == 0) {
             model.addAttribute("message", "Empty Cart !");
             model.addAttribute("alert", "alert alert-danger");
             return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
         }
+
+        // Kiểm tra số lượng có thể mua
+        for (Cart_detail cart_detail : cart_details) {
+            if (cart_detail.getQuantity() > cart_detail.getIdProduct().getAmount()) {
+                model.addAttribute("message", "Can not buy more than available !");
+                model.addAttribute("alert", "alert alert-danger");
+                return cartView(emailCustomer, passwordCustomer, session, model);
+            }
+        }
+
+        // Kiểm tra thông tin thanh toán
         String validateCheckout = validateCheckout(model, customer1.getEmailCustomer(), customer1.getCustomerName(), customer1.getPhone(), "checkout");
         if (validateCheckout.length() > 0) {
             return cartAndCheckout(emailCustomer, passwordCustomer, session, model, "checkout");
         }
 
+        // Thêm hoá đơn
         Invoice invoice = new Invoice();
         invoice.setAddress(customer1.getAddress());
         invoice.setCustomerName(customer1.getCustomerName());
@@ -171,6 +184,7 @@ public class CartController {
         invoice.setInvoiceStatus(invoiceStatusRepository.findByName("Wait for Confirmation"));
         invoiceService.save(invoice);
 
+        // Thêm hoá đơn chi tiết
         for (Cart_detail cart_detail : cart_details) {
             Invoice_detail invoice_detail = new Invoice_detail();
             invoice_detail.setQuantity(cart_detail.getQuantity());
@@ -179,6 +193,14 @@ public class CartController {
             invoiceDetailService.save(invoice_detail);
         }
 
+        // Trừ số lượng sp trong kho
+        for (Cart_detail cart_detail : cart_details) {
+            Product product = cart_detail.getIdProduct();
+            product.setAmount(product.getAmount() - cart_detail.getQuantity());
+            productService.save(product);
+        }
+
+        // Xoá cart detail sau khi đã xác nhận mua hàng
         Long idCart = cartService.findIdCart(customer.getIdCustomer()).getIdCart();
         cartDetailService.removeCart(idCart);
 
@@ -229,6 +251,12 @@ public class CartController {
             return checkLogin;
         }
 
+        TreeMap<List<Invoice_detail>, Integer> invoiceTreeMap = getInvoiceTreeMap(customer);
+        model.addAttribute("invoiceTreeMap", invoiceTreeMap);
+        return "historyOrder";
+    }
+
+    public TreeMap<List<Invoice_detail>, Integer> getInvoiceTreeMap(Customer customer){
         TreeMap<List<Invoice_detail>, Integer> invoiceTreeMap = new TreeMap<>(new Comparator<List<Invoice_detail>>() {
             @Override
             public int compare(List<Invoice_detail> o1, List<Invoice_detail> o2) {
@@ -248,8 +276,7 @@ public class CartController {
             }
             invoiceTreeMap.put(invoice_details, total);
         }
-        model.addAttribute("invoiceTreeMap", invoiceTreeMap);
-        return "historyOrder";
+        return invoiceTreeMap;
     }
 
     public String cartAndCheckout(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,

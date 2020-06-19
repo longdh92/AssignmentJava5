@@ -80,7 +80,7 @@
                     <th:block th:if="${invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Delivered' &&
                     invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Canceled'}">
                         <tr>
-                            <td><a class="btn btn-default update" href="#">Cancel Order</a></td>
+                            <td><a class="btn btn-default update" th:href="@{'/cancelOrder/' + ${(invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice()*4+74)/2}}">Cancel Order</a></td>
                         </tr>
                     </th:block>
                     </tbody>

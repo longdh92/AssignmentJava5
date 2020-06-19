@@ -28,7 +28,7 @@
                             <span>
 									<span th:text="${'UD $' + product.getPrice()}"></span>
 									<label>Quantity:</label>
-									<input type="number" min="1" th:max="${product.getAmount()}" name="quantity" required/>
+									<input type="number" min="1" name="quantity" required/>
 									<button type="submit" class="btn btn-fefault cart">
 										<i class="fa fa-shopping-cart"></i>
 										Add to cart

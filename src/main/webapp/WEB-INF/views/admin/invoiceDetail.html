@@ -21,18 +21,21 @@
                 <div th:class="${alert}">
                     <strong th:text="${message}"></strong>
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Update Status
-                    </button>
-                    <div class="dropdown-menu">
-                        <div th:each="status : ${allStatus}">
-                            <a class="dropdown-item"
-                               th:href="@{'/admin/updateInvoice/' + ${(invoice.getIdInvoice()*4+74)/2} + '/' + ${status.getIdStatus()}}"
-                               th:text="${status.getStatusName()}"></a>
+                <th:block th:if="${invoice.getInvoiceStatus().getStatusName() != 'Delivered' && invoice.getInvoiceStatus().getStatusName() != 'Canceled'}">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Update Status
+                        </button>
+                        <div class="dropdown-menu">
+                            <div th:each="status : ${allStatus}">
+                                <a class="dropdown-item"
+                                   th:href="@{'/admin/updateInvoice/' + ${(invoice.getIdInvoice()*4+74)/2} + '/' + ${status.getIdStatus()}}"
+                                   th:text="${status.getStatusName()}"></a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </th:block>
                 <br><br>
                 <div class="card mb-4">
                     <div class="card-header"
