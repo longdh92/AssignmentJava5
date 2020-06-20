@@ -53,4 +53,12 @@ public class AdminRepositoryImpl implements AdminRepository {
         adminTypedQuery.setParameter("usernameAdmin", name);
         return adminTypedQuery.getResultList().get(0);
     }
+
+    @Override
+    public List<Admin> findByRole(boolean role) {
+        String query = "select a from Admin a where a.role = :role";
+        TypedQuery<Admin> adminTypedQuery = entityManager.createQuery(query, Admin.class);
+        adminTypedQuery.setParameter("role", role);
+        return adminTypedQuery.getResultList();
+    }
 }

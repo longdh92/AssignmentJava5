@@ -59,4 +59,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         invoiceTypedQuery.setParameter("customer", customer);
         return invoiceTypedQuery.getResultList();
     }
+
+    @Override
+    public List<Invoice> findByStatus(String status) {
+        String query = "select i from Invoice i where i.invoiceStatus.statusName like :status";
+        TypedQuery<Invoice> invoiceTypedQuery = entityManager.createQuery(query, Invoice.class);
+        invoiceTypedQuery.setParameter("status", "%" + status + "%");
+        return invoiceTypedQuery.getResultList();
+    }
 }

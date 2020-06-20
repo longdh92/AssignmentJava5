@@ -14,4 +14,6 @@ public interface AdminService {
     void remove(Long id);
 
     Admin findByName(String name);
+
+    List<Admin> findByRole(boolean role);
 }

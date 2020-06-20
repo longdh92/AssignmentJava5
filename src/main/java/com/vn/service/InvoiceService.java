@@ -15,4 +15,6 @@ public interface InvoiceService {
     void remove(Long id);
 
     List<Invoice> findByCustomer(Customer customer);
+
+    List<Invoice> findByStatus(String status);
 }

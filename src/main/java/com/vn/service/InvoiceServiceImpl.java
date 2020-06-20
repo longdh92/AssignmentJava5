@@ -36,4 +36,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<Invoice> findByCustomer(Customer customer) {
         return invoiceRepository.findByCustomer(customer);
     }
+
+    @Override
+    public List<Invoice> findByStatus(String status) {
+        return invoiceRepository.findByStatus(status);
+    }
 }

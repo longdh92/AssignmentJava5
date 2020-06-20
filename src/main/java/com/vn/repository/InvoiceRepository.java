@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface InvoiceRepository extends Repository<Invoice> {
     List<Invoice> findByCustomer(Customer customer);
+
+    List<Invoice> findByStatus(String status);
 }

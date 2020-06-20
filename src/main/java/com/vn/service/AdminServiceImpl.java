@@ -35,4 +35,9 @@ public class AdminServiceImpl implements AdminService {
     public Admin findByName(String name) {
         return adminRepository.findByName(name);
     }
+
+    @Override
+    public List<Admin> findByRole(boolean role) {
+        return adminRepository.findByRole(role);
+    }
 }

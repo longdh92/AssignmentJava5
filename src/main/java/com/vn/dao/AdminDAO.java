@@ -68,4 +68,9 @@ public class AdminDAO implements AdminService {
     public Admin findByName(String name) {
         return null;
     }
+
+    @Override
+    public List<Admin> findByRole(boolean role) {
+        return null;
+    }
 }

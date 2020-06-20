@@ -35,12 +35,13 @@ public class AdminController {
     }
 
     @RequestMapping("/adminList")
-    public String adminList(HttpSession session, Model model) {
+    public String adminList(HttpSession session, Model model,
+                            @RequestParam(defaultValue = "true") Boolean role) {
         String checkLogin = checkLogin(session, model);
         if (checkLogin.length() > 0) {
             return checkLogin;
         }
-        model.addAttribute("adminList", adminService.findAll());
+        model.addAttribute("adminList", adminService.findByRole(role));
         return "admin/adminList";
     }
 
