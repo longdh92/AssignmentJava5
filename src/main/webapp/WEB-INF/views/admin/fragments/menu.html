@@ -31,6 +31,7 @@
                         <div class="collapse" id="pagesCollapseAccounts" aria-labelledby="headingOne"
                              data-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" th:href="@{/admin/adminList(role='')}">All Users</a>
                                 <a class="nav-link" th:href="@{/admin/adminList(role=true)}">Admins</a>
                                 <a class="nav-link" th:href="@{/admin/adminList(role=false)}">Guests</a>
                             </nav>
@@ -58,9 +59,9 @@
                         <div class="collapse" id="pagesCollapseInvoices" aria-labelledby="headingOne"
                              data-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='')}">All Invoices</a>
-                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='Wait for Confirmation')}">Wait for Confirmation</a>
-                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='Wait for Taking Stuffs')}">Wait for Taking Stuffs</a>
+                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='')}">All Orders</a>
+                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='Wait for Confirmation')}">Pending</a>
+                                <a class="nav-link" th:href="@{/admin/invoiceListView(status='Wait for Taking Stuffs')}">Taking Stuffs</a>
                                 <a class="nav-link" th:href="@{/admin/invoiceListView(status='Delivery')}">Delivery</a>
                                 <a class="nav-link" th:href="@{/admin/invoiceListView(status='Delivered')}">Delivered</a>
                                 <a class="nav-link" th:href="@{/admin/invoiceListView(status='Canceled')}">Canceled</a>

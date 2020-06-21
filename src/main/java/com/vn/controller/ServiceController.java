@@ -64,13 +64,9 @@ public class ServiceController {
                               @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
                               @PathVariable(name = "idInvoice") Long idInvoice, HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("customer");
-        if (customer == null) {
-            model.addAttribute("customer", new Customer());
-            model.addAttribute("emailCustomer", emailCustomer);
-            model.addAttribute("passwordCustomer", passwordCustomer);
-            return "loginUser";
-        } else {
-            model.addAttribute("customer", customer);
+        String checkLogin = checkLogin(emailCustomer, passwordCustomer, session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
         }
 
         Long id = (idInvoice * 2 - 74) / 4;
@@ -112,5 +108,20 @@ public class ServiceController {
             invoiceTreeMap.put(invoice_details, total);
         }
         return invoiceTreeMap;
+    }
+
+    public String checkLogin(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                             @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                             HttpSession session, Model model) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            model.addAttribute("customer", new Customer());
+            model.addAttribute("emailCustomer", emailCustomer);
+            model.addAttribute("passwordCustomer", passwordCustomer);
+            return "loginUser";
+        } else {
+            model.addAttribute("customer", customer);
+        }
+        return "";
     }
 }

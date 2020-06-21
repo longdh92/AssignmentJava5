@@ -256,6 +256,14 @@ public class HomeController {
         Customer customer1 = (Customer) session.getAttribute("customer");
         model.addAttribute("customer", customer1);
 
+        for (Customer customer2 : customerService.findAll()) {
+            if (customer1.getIdCustomer() != customer2.getIdCustomer() && customer.getEmailCustomer().equalsIgnoreCase(customer2.getEmailCustomer())) {
+                model.addAttribute("message1", "Can not use this email !");
+                model.addAttribute("alert1", "alert alert-danger");
+                return "updateUser";
+            }
+        }
+
         String validate = validateUpdate(model, customer, customer.getEmailCustomer(), customer.getCustomerName(),
                 customer.getPhone(), gender, "updateUser");
         if (validate.length() > 0) {

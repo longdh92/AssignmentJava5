@@ -255,7 +255,33 @@ public class CartController {
         return "historyOrder";
     }
 
-    public TreeMap<List<Invoice_detail>, Integer> getInvoiceTreeMap(Customer customer){
+    @RequestMapping("/buyAgain/{idInvoice}")
+    public String buyAgain(@CookieValue(name = "emailCustomer", defaultValue = "") String emailCustomer,
+                           @CookieValue(name = "passwordCustomer", defaultValue = "") String passwordCustomer,
+                           HttpSession session,
+                           Model model,
+                           @PathVariable(name = "idInvoice") Long idInvoice) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        String checkLogin = checkLogin(emailCustomer, passwordCustomer, session, model);
+        if (checkLogin.length() > 0) {
+            return checkLogin;
+        }
+        Cart cart = cartService.findIdCart(customer.getIdCustomer());
+        cartDetailService.removeCart(cart.getIdCart());
+        Long idI = (idInvoice * 2 - 74) / 4;
+        List<Invoice_detail> invoice_details = invoiceDetailService.findByIdInvoice(idI);
+        for (Invoice_detail invoice_detail : invoice_details) {
+            Cart_detail cart_detail = new Cart_detail();
+            cart_detail.setQuantity(invoice_detail.getQuantity());
+            cart_detail.setIdCart(cart);
+            cart_detail.setIdProduct(invoice_detail.getIdProduct());
+            cartDetailService.save(cart_detail);
+        }
+
+        return cartView(emailCustomer, passwordCustomer, session, model);
+    }
+
+    public TreeMap<List<Invoice_detail>, Integer> getInvoiceTreeMap(Customer customer) {
         TreeMap<List<Invoice_detail>, Integer> invoiceTreeMap = new TreeMap<>(new Comparator<List<Invoice_detail>>() {
             @Override
             public int compare(List<Invoice_detail> o1, List<Invoice_detail> o2) {

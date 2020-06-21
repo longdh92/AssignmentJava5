@@ -72,17 +72,25 @@
                                 </tr>
                                 <tr>
                                     <td>Total</td>
-                                    <td><span th:text="${invoiceDetails.getValue() + invoiceDetails.getValue()/10}"></span></td>
+                                    <td><span
+                                            th:text="${invoiceDetails.getValue() + invoiceDetails.getValue()/10}"></span>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-                    <th:block th:if="${invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Delivered' &&
+                    <tr>
+                        <th:block th:if="${invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Delivered' &&
                     invoiceDetails.getKey().get(0).getIdInvoice().getInvoiceStatus().getStatusName() != 'Canceled'}">
-                        <tr>
-                            <td><a class="btn btn-default update" th:href="@{'/cancelOrder/' + ${(invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice()*4+74)/2}}">Cancel Order</a></td>
-                        </tr>
-                    </th:block>
+                            <td><a class="btn btn-default update"
+                                   th:href="@{'/cancelOrder/' + ${(invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice()*4+74)/2}}"
+                                   onclick="return confirm('Are You Sure ?')">Cancel Order</a></td>
+                        </th:block>
+                        <td><a class="btn btn-default update"
+                               th:href="@{'/buyAgain/' + ${(invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice()*4+74)/2}}"
+                               onclick="return confirm('This action will remove your current cart. Continue?')">Buy Again</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
