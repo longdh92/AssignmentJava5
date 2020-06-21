@@ -44,10 +44,7 @@
                             <p th:text="${'$' + invoiceDetail.getIdProduct().getPrice()}"></p>
                         </td>
                         <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <input class="cart_quantity_input" type="text" name="quantity"
-                                       th:value="${invoiceDetail.getQuantity()}" autocomplete="off" size="2" readonly>
-                            </div>
+                            <p th:text="${invoiceDetail.getQuantity()}"></p>
                         </td>
                         <td class="cart_total">
                             <p class="cart_total_price"
@@ -88,7 +85,8 @@
                         </th:block>
                         <td><a class="btn btn-default update"
                                th:href="@{'/buyAgain/' + ${(invoiceDetails.getKey().get(0).getIdInvoice().getIdInvoice()*4+74)/2}}"
-                               onclick="return confirm('This action will remove your current cart. Continue?')">Buy Again</a>
+                               onclick="return confirm('This action will remove your current cart. Continue?')">Buy
+                            Again</a>
                         </td>
                     </tr>
                     </tbody>
