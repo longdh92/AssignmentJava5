@@ -41,7 +41,7 @@ public class AdminController {
         if (checkLogin.length() > 0) {
             return checkLogin;
         }
-        if(role.equals("")){
+        if (role.equals("")) {
             model.addAttribute("adminList", adminService.findAll());
         } else {
             model.addAttribute("adminList", adminService.findByRole(Boolean.parseBoolean(role)));
@@ -64,6 +64,11 @@ public class AdminController {
         for (Admin admin1 : list) {
             if (admin.getUsernameAdmin().equals(admin1.getUsernameAdmin())) {
                 if (bCryptPasswordEncoder.matches(admin.getPasswordAdmin(), admin1.getPasswordAdmin())) {
+                    if (admin1.getStatus().equalsIgnoreCase("REMOVED")) {
+                        model.addAttribute("message", "Your account is blocked !");
+                        model.addAttribute("alert", "alert alert-danger");
+                        return "admin/login";
+                    }
                     Cookie usernameAdmin = new Cookie("usernameAdmin", admin.getUsernameAdmin());
                     Cookie passwordAdmin = new Cookie("passwordAdmin", admin.getPasswordAdmin());
                     if (request.getParameter("rememberAdmin") != null) {
