@@ -6,6 +6,7 @@ import com.vn.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.security.SecureRandom;
 
 @Controller
 @RequestMapping("/admin")
@@ -23,6 +25,20 @@ public class CustomerController {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    static final String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static SecureRandom secureRandom = new SecureRandom();
+
+    String randomString(int length) {
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            stringBuilder.append(characters.charAt(secureRandom.nextInt(characters.length())));
+        }
+        return stringBuilder.toString();
+    }
 
     @GetMapping("/customerList")
     public String customerList(HttpSession session, Model model) {
@@ -42,7 +58,10 @@ public class CustomerController {
         }
         Long id = (idCustomer * 2 - 74) / 4;
         Customer customer = customerService.findById(id);
-        customer.setPasswordCustomer("123456");
+
+        String newPassword = randomString(6);
+
+        customer.setPasswordCustomer(bCryptPasswordEncoder.encode(newPassword));
         customer.setStatus("");
         customerService.save(customer);
 
@@ -51,7 +70,7 @@ public class CustomerController {
 
         message.setTo(customer.getEmailCustomer());
         message.setSubject("Reset password");
-        message.setText("Your password is reset to 123456");
+        message.setText("Your password is reset to: " + newPassword);
 
         // Send Message!
         javaMailSender.send(message);
