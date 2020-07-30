@@ -1,10 +1,15 @@
 package com.vn.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "admin")
+@Getter
+@Setter
 public class Admin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,53 +36,5 @@ public class Admin implements Serializable {
         return "Admin{" +
                 "username='" + usernameAdmin + '\'' +
                 '}';
-    }
-
-    public Long getIdAdmin() {
-        return idAdmin;
-    }
-
-    public void setIdAdmin(Long idAdmin) {
-        this.idAdmin = idAdmin;
-    }
-
-    public String getUsernameAdmin() {
-        return usernameAdmin;
-    }
-
-    public void setUsernameAdmin(String usernameAdmin) {
-        this.usernameAdmin = usernameAdmin;
-    }
-
-    public String getPasswordAdmin() {
-        return passwordAdmin;
-    }
-
-    public void setPasswordAdmin(String passwordAdmin) {
-        this.passwordAdmin = passwordAdmin;
-    }
-
-    public String getEmailAdmin() {
-        return emailAdmin;
-    }
-
-    public void setEmailAdmin(String emailAdmin) {
-        this.emailAdmin = emailAdmin;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public boolean isRole() {
-        return role;
-    }
-
-    public void setRole(boolean role) {
-        this.role = role;
     }
 }
